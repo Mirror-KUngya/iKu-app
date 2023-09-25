@@ -6,6 +6,9 @@
  */
 
 import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -55,6 +58,7 @@ function Section({children, title}: SectionProps): JSX.Element {
     </View>
   );
 }
+const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -65,9 +69,12 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <View>
-        <Text>안녕</Text>
-      </View>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{headerShown: false}}></Stack.Screen>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

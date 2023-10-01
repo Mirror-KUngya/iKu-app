@@ -22,6 +22,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import colors from './lib/styles/colors';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
@@ -35,7 +36,16 @@ function App(): JSX.Element {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{headerShown: true}}></Stack.Screen>
+          options={{
+            title: 'iKU',
+            headerTintColor: colors.darkGreen,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 30,
+            },
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+          }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

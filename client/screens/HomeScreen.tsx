@@ -36,7 +36,10 @@ const HomeScreen: React.FC<HomeProps> = ({navigation}) => {
       </View>
       <View style={styles.bottomContainer}>
         <TouchableOpacity
-          style={[styles.buttonContainer, {backgroundColor: '#0BA81E'}]}>
+          style={[styles.buttonContainer, {backgroundColor: '#0BA81E'}]}
+          onPress={() => {
+            navigation.navigate('SettingScreen');
+          }}>
           <Text style={styles.buttonText}>설정</Text>
           <Image
             source={require('../assets/images/setting.png')}

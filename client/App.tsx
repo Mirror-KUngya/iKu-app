@@ -3,7 +3,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {RootStackParamList} from './types';
 import colors from './lib/styles/colors';
-import {CheckListScreen, HomeScreen, LoginScreen} from './screens';
+import {
+  CheckListScreen,
+  HomeScreen,
+  LoginScreen,
+  SettingScreen,
+} from './screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
@@ -32,6 +37,16 @@ function App(): JSX.Element {
           component={CheckListScreen}
           options={{
             title: '체크리스트',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerTitleAlign: 'center',
+          }}></Stack.Screen>
+        <Stack.Screen
+          name="SettingScreen"
+          component={SettingScreen}
+          options={{
+            title: '설정',
             headerTitleStyle: {
               fontWeight: 'bold',
             },

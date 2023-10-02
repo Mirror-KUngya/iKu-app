@@ -1,11 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
 import React from 'react';
 import {RootStackParamList} from './types';
 import colors from './lib/styles/colors';
-import CheckListScreen from './screens/CheckListScreen';
+import {CheckListScreen, HomeScreen, LoginScreen} from './screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
@@ -32,7 +30,13 @@ function App(): JSX.Element {
         <Stack.Screen
           name="CheckListScreen"
           component={CheckListScreen}
-          options={{title: '체크리스트'}}></Stack.Screen>
+          options={{
+            title: '체크리스트',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerTitleAlign: 'center',
+          }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

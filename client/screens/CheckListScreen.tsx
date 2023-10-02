@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
-export default CheckListScreen;
+export {CheckListScreen};

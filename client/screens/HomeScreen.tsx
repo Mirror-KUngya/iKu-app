@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-export default HomeScreen;
+export {HomeScreen};

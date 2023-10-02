@@ -10,9 +10,9 @@ import colors from '../lib/styles/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
 
-type ProfileProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
+type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
-const LoginScreen: React.FC<ProfileProps> = ({navigation}) => {
+const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image

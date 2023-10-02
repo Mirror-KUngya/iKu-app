@@ -1,6 +1,10 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {RootStackParamList} from '../types';
 
-const HomeScreen = () => {
+type HomeProps = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;
+
+const HomeScreen: React.FC<HomeProps> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -8,7 +12,10 @@ const HomeScreen = () => {
           style={[
             styles.buttonContainer,
             {backgroundColor: '#003865', flex: 1},
-          ]}>
+          ]}
+          onPress={() => {
+            navigation.navigate('CheckListScreen');
+          }}>
           <Text style={styles.buttonText}>체크리스트 관리</Text>
           <Image
             source={require('../assets/images/check-list.png')}

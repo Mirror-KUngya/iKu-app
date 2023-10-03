@@ -9,8 +9,8 @@ import {
   LoginScreen,
   MissionStatusScreen,
   SettingScreen,
+  SignUpScreen,
 } from './screens';
-import {SignUpScreen} from './screens/SignUpScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {

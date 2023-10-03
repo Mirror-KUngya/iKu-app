@@ -6,3 +6,4 @@ export * from './HomeScreen';
 export * from './LoginScreen';
 export * from './SettingScreen';
 export * from './MissionStatusScreen';
+export * from './SignUpScreen';

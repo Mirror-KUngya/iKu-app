@@ -7,14 +7,32 @@ import {
   CheckListScreen,
   HomeScreen,
   LoginScreen,
+  MissionStatusScreen,
   SettingScreen,
 } from './screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
+  const customOption1 = (title = '') => {
+    return {
+      title: title,
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerTitleAlign: 'center',
+    };
+  };
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Navigator
+        initialRouteName="LoginScreen"
+        screenOptions={{
+          headerTitleStyle: {
+            fontWeight: '900',
+          },
+          headerTitleAlign: 'center',
+        }}>
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -30,27 +48,24 @@ function App(): JSX.Element {
               fontSize: 30,
             },
             headerBackVisible: false,
-            headerTitleAlign: 'center',
           }}></Stack.Screen>
         <Stack.Screen
           name="CheckListScreen"
           component={CheckListScreen}
           options={{
             title: '체크리스트',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            headerTitleAlign: 'center',
           }}></Stack.Screen>
         <Stack.Screen
           name="SettingScreen"
           component={SettingScreen}
           options={{
             title: '설정',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            headerTitleAlign: 'center',
+          }}></Stack.Screen>
+        <Stack.Screen
+          name="MissionStatusScreen"
+          component={MissionStatusScreen}
+          options={{
+            title: '미션 현황',
           }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

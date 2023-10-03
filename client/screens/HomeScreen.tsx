@@ -26,7 +26,10 @@ const HomeScreen: React.FC<HomeProps> = ({navigation}) => {
           style={[
             styles.buttonContainer,
             {backgroundColor: '#EF5B0C', flex: 1},
-          ]}>
+          ]}
+          onPress={() => {
+            navigation.navigate('MissionStatusScreen');
+          }}>
           <Text style={styles.buttonText}>미션 현황 {'\n'}보기</Text>
           <Image
             source={require('../assets/images/calendar.png')}

@@ -3,4 +3,5 @@ export type RootStackParamList = {
   LoginScreen: undefined;
   CheckListScreen: undefined;
   SettingScreen: undefined;
+  MissionStatusScreen: undefined;
 };

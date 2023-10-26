@@ -9,6 +9,7 @@ import {
   LoginScreen,
   MissionStatusScreen,
   SettingScreen,
+  SignUpScreen,
 } from './screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,6 +38,12 @@ function App(): JSX.Element {
           name="LoginScreen"
           component={LoginScreen}
           options={{headerShown: false}}></Stack.Screen>
+        <Stack.Screen
+          name="SignUpScreen"
+          component={SignUpScreen}
+          options={{
+            title: '회원가입',
+          }}></Stack.Screen>
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}

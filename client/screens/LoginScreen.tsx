@@ -52,7 +52,10 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         <TouchableOpacity onPress={() => {}}>
           <Text style={styles.textInButton}>아이디찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('SignUpScreen');
+          }}>
           <Text style={styles.textInButton}>회원가입</Text>
         </TouchableOpacity>
       </View>

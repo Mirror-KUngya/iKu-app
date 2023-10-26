@@ -18,8 +18,6 @@ type CheckListProps = NativeStackScreenProps<
 let checkList = [
   {text: '가스 벨브 잠그기', fulFilled: true},
   {text: '창문 닫기', fulFilled: false},
-  {text: '창문 닫기', fulFilled: true},
-  {text: '창문 닫기', fulFilled: false},
 ];
 const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
   return (

@@ -15,16 +15,18 @@ import React, {useState} from 'react';
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
 const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
-  const [formData, setFormData] = useState({
-    userId: '',
-    password: '',
-    passwordConfirm: '',
-    userName: '',
-    phone: '',
-  });
+  const [userId, setUserID] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [seniorUserId, setSeniorUserID] = useState('');
+  const [seniorUserPassword, setSenioeUserPassword] = useState('');
+
   const [userOption, setUserOption] = useState<'보호자 회원' | '노인 회원'>(
     '보호자 회원',
   );
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
@@ -50,6 +52,8 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
             returnKeyType={'next'}
             autoComplete={'email'}
             blurOnSubmit={false}
+            value={userId}
+            onChange={e => setUserID(e.nativeEvent.text)}
           />
           <TouchableOpacity>
             <Text style={styles.okText}>중복 확인</Text>
@@ -61,12 +65,18 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
           style={styles.textInput}
           returnKeyType={'next'}
           blurOnSubmit={false}
+          secureTextEntry={true}
+          value={password}
+          onChange={e => setPassword(e.nativeEvent.text)}
         />
         <TextInput
           placeholder="비밀번호 확인"
           style={styles.textInput}
           returnKeyType={'next'}
           blurOnSubmit={false}
+          secureTextEntry={true}
+          value={confirmPassword}
+          onChange={e => setConfirmPassword(e.nativeEvent.text)}
         />
         <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
         <View style={{marginTop: 20}}></View>
@@ -100,27 +110,45 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
           style={styles.textInput}
           returnKeyType={'next'}
           blurOnSubmit={false}
+          value={userName}
+          onChange={e => setUserName(e.nativeEvent.text)}
         />
         <TextInput
           placeholder="전화번호"
           style={styles.textInput}
+          keyboardType="number-pad"
           returnKeyType={'next'}
           blurOnSubmit={false}
+          value={phone}
+          onChange={e => setPhone(e.nativeEvent.text)}
         />
         {userOption === '보호자 회원' ? (
           <>
+            <TextInput
+              placeholder="노인회원 아이디"
+              style={styles.textInput}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              value={seniorUserId}
+              onChange={e => setSeniorUserID(e.nativeEvent.text)}
+            />
+
             <View style={styles.rowContainer}>
               <TextInput
-                placeholder="노인회원 아이디"
+                placeholder="노인회원 비밀번호"
                 style={styles.textInput}
                 returnKeyType={'next'}
                 blurOnSubmit={false}
+                value={seniorUserPassword}
+                onChange={e => setSenioeUserPassword(e.nativeEvent.text)}
               />
               <TouchableOpacity>
-                <Text style={styles.okText}>검색</Text>
+                <Text style={[styles.okText, {margin: 0}]}>검색</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.confirmText}>존재하지 않는 아이디입니다.</Text>
+            <Text style={styles.confirmText}>
+              비밀번호가 일치하지 않습니다.
+            </Text>
           </>
         ) : (
           <></>

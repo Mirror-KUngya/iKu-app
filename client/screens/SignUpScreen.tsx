@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Image,
@@ -10,7 +11,8 @@ import {
 } from 'react-native';
 import {RootStackParamList} from '../types';
 import colors from '../lib/styles/colors';
-import React, {useState} from 'react';
+import inputState from '../lib/utils/inputState';
+import DatePicker from '../components/DatePicker';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
@@ -27,6 +29,16 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
     '보호자 회원',
   );
 
+  const [userIdInputState, setUserIdInputState] = useState(inputState.NORMAL);
+  const [date, setDate] = useState({
+    year: '2023',
+    month: '01',
+    day: '01',
+  });
+
+  const handleDateChange = (year: string, month: string, day: string) => {
+    setDate({year, month, day});
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
@@ -151,7 +163,14 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
             </Text>
           </>
         ) : (
-          <></>
+          <>
+            <DatePicker
+              year={date.year}
+              month={date.month}
+              day={date.day}
+              onDateChange={handleDateChange}
+            />
+          </>
         )}
       </View>
       <TouchableOpacity

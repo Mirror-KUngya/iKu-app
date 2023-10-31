@@ -20,4 +20,6 @@ export default defineConfig({
       },
     }),
   ],
+
+  base: '/iKU/', // 이 부분을 수정
 });

@@ -8,11 +8,11 @@ router.put("/", async (req, res) => {
     try {
         let user = await User.findOne({ UserID });
         if (!user) {
-            console.log("ID doesn't exist.");
-            return res.status(400).json({ "message": "ID doesn't exist." });
+            console.log("User doesn't exist.");
+            return res.status(404).json({ "message": "User does not exist." });
         }
         user.updateOne({GuardPhone: newGuardPhone});
-        return res.status(201).json({"newGuardPhone": newGuardPhone});
+        return res.status(200).json({"newGuardPhone": newGuardPhone});
     } catch (error) {
         console.log(error.message);
         return res.status(500).send("Server Error")

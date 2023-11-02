@@ -12,47 +12,53 @@ router.get("/", async (req, res) => {
     const { UserID, MissionDate } = req.body;
 
     try {
-        const user = await User.findOne({ "UserID": UserID, "Mission.MissionDate": MissionDate });
-
-        // 해당 날짜 미션 정보 없으면 default값으로 미션 정보 생성
+        const user = await User.findOne({ "UserID": UserID });
         if (!user) {
-            User.updateOne({ UserID: user.UserID }, {
-                $push: {
-                    Mission: {
-                        MissionDate: date.formatDate(),
-                        Smile: false,
-                        Game: false,
-                        Exercise: false,
-                        Movement: false
-                    }
-                }
-            })
+            return res.status(404).json({ "message": "User does not exist." });
         }
-        console.log(user.Mission)
-        return res.status(201).json(user.Mission);
+        let mission = user.Mission.find(m => m.MissionDate === MissionDate);
+        if (!mission) {
+            mission = { MissionDate: MissionDate, Smile: false, Game: false, Exercise: false, Movement: false };
+            user.Mission.push(mission);
+            await user.save();
+        }
+
+        console.log(mission)
+        return res.status(200).json(mission);
     } catch (error) {
         console.log(error.message);
         res.status(500).send("Server Error")
     }
 });
 
-// 미션 완료한 거 수정
-router.put("/:mission", async (req, res) => {
-    const { UserID, MissionDate } = req.body;
-    const complete = req.params.mission;
+// 미션 완료한 거 수정 (false -> true)
+router.put("/", async (req, res) => {
     try {
-        let mission = await Mission.findOne({ UserID, MissionDate });
+        const { UserID, MissionDate, completeMission } = req.body;
+        const result = await User.updateOne({
+            "UserID": UserID,
+            "Mission.MissionDate": MissionDate
+        },
+        {
+            $set: {
+                ["Mission.$." + completeMission]: true
+            }
+        });
 
-        if (!mission) {
-            return res.status(400);
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ "message": "User or Mission not found" });
         }
-        // 미션 완료한 거 수정
-        mission.updateOne({ complete: true });
 
-    } catch (error) {
-        console.log(error.message);
-        return res.status(500).send("Server Error");
+        res.status(200).json({
+            "UserID": UserID,
+            "MissionDate": MissionDate,
+            [completeMission]: true
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
     }
 });
+
 
 module.exports = router;

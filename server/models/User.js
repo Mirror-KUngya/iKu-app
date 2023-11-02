@@ -3,13 +3,16 @@ const mongoose = require("mongoose")
 // Schema 생성
 const UserSchema = new mongoose.Schema({
     UserName: {
-        type: String
+        type: String,
+        required: true
     },
     UserPhone: {
-        type: String
+        type: String,
+        required: true
     },
     UserAddress: {
-        type: String
+        type: String,
+        required: true
     },
     UserID: {
         type: String,
@@ -22,7 +25,7 @@ const UserSchema = new mongoose.Schema({
     },
     BirthYear: {
         type: Number,
-        required: true,
+        required: true
     },
     BirthMonth: {
         type: Number,
@@ -33,13 +36,16 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     UserType: {
-        type: Number
+        type: Number,
+        required: true
     },
     GuardPhone: {
-        type: String
+        type: String,
+        required: true
     },
     Relationship: {
-        type: String
+        type: String,
+        required: true
     },
     Mission: [{
         MissionDate: {
@@ -59,11 +65,7 @@ const UserSchema = new mongoose.Schema({
         Movement: {
             type: Boolean
         }
-    }],
-    CheckList: {
-        type: mongoose.Schema.Types.Mixed,
-        default: {}
-    }
+    }]
 });
 
 module.exports = User = mongoose.model("Users", UserSchema, "Users")

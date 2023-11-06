@@ -1,4 +1,5 @@
 const express = require('express');
+const {spawn} = require('child_process');
 const router = express.Router();
 
 const eventStreamHeaderOption = {
@@ -17,7 +18,7 @@ router.get('/:mission', (req, res) => {
   else if (mission === 'clap') targetFile = 'clap.py';
   else if (mission === 'side') targetFile = 'side.py';
 
-  const pythonProcess = spawn('python3', [`src/${targetFile}`]);
+  const pythonProcess = spawn('python3', [`pythonSrc/${targetFile}`]);
 
   pythonProcess.stdout.on('data', data => {
     const message = data.toString();
@@ -43,3 +44,5 @@ router.get('/:mission', (req, res) => {
     res.end();
   });
 });
+
+module.exports = router;

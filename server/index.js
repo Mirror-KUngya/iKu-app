@@ -20,6 +20,10 @@ app.use('/missions', missionRouter);
 app.use('/checkList', checkListRouter);
 app.use('/setting', settingRouter);
 
+app.get('/test', (req, res) => {
+    res.json({"test": "success"});
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

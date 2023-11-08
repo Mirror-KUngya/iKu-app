@@ -102,7 +102,7 @@ router.post("/signIn", async (req, res) => {
 // 아이디 찾기
 router.post("/findID", async (req, res) => {
   const { UserPhone } = req.body;
-
+ // 이름, 전화번호롤 찾기
   try {
     const user = await User.findOne({ UserPhone });
 

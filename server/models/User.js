@@ -65,7 +65,16 @@ const UserSchema = new mongoose.Schema({
         Movement: {
             type: Boolean
         }
-    }]
+    }],
+    Notice_hasCompleted: { // 미션 완료 시 푸쉬 알림 여부
+        type: Boolean
+    },
+    Notice_ifNon: { // 감지 없을 시 푸쉬 알림 여부
+        type: Boolean
+    },
+    Device_token: { // FCM 디바이스 토큰
+        type: String
+    }
 });
 
 module.exports = User = mongoose.model("Users", UserSchema, "Users")

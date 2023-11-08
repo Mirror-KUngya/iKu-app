@@ -54,9 +54,9 @@ router.put("/", async (req, res) => {
             "MissionDate": MissionDate,
             [completeMission]: true
         });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
     }
 });
 

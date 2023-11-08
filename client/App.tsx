@@ -12,8 +12,40 @@ import {
   SignUpScreen,
 } from './screens';
 
+import { useEffect } from 'react';
+import axios from 'axios';
+import getToken from './getToken'
+
+const SERVER_URL = 'http://192.168.64.19:3000/notice/token';
+
+// // 서버에 전송할 토큰 형태를 정의합니다.
+// interface TokenPayload {
+//   token: string;
+// }
+
+// async function sendTokenToServer(token: string): Promise<void> {
+//   try {
+//     await axios.post<TokenPayload>(SERVER_URL, { token });
+//     console.log('Token sent to server successfully');
+//   } catch (error) {
+//     console.error('Error sending token to server:', error);
+//   }
+// }
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
+
+  // useEffect(() => {
+  //   const fetchToken = async () => {
+  //     const token = await getToken();
+  //     if (token) {
+  //       sendTokenToServer(token);
+  //       console.log(token);
+  //     }
+  //   };
+
+  //   fetchToken();
+  // }, []);
   const customOption1 = (title = '') => {
     return {
       title: title,

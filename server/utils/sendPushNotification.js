@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const date = require("../config/date");
+const date = require("./date");
 
 const sendPushNotification = (device_token) => {
   // 푸시 메시지 설정

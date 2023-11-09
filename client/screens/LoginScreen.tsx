@@ -6,13 +6,37 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import React, { useState } from 'react';
 import colors from '../lib/styles/colors';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types';
+import axios from 'axios';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
-const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
+const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
+  const [userId, setUserID] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogin = async () => {
+    console.log("로그인 버튼 눌림");
+    const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/users/signIn';
+    try {
+      const response = await axios.post(SERVER_URL, { UserID:userId, UserPW:password });
+      console.log('UserInfo sent to server successfully');
+      console.log(response.status)
+      // 로그인 성공 처리
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+        navigation.navigate('HomeScreen');
+      } else { // 로그인 에러
+        console.log('Login failed:', response.data.message);
+      }
+
+    } catch (error) {
+      console.log('Error sending userINfo to server:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -26,6 +50,9 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         returnKeyType={'next'}
         autoComplete={'email'}
         blurOnSubmit={false}
+        value={userId}
+        // onChange={e => setUserID(e.nativeEvent.text)}
+        onChangeText={text => setUserID(text)}
       />
       <TextInput
         placeholder="비밀번호"
@@ -34,22 +61,22 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         autoComplete={'password'}
         secureTextEntry={true}
         blurOnSubmit={false}
+        value={password}
+        // onChange={e => setPassword(e.nativeEvent.text)}
+        onChangeText={text => setPassword(text)}
       />
       <View>
         <TouchableOpacity
           style={[styles.loginButtonContainer]}
-          onPress={() => {}}>
+          onPress={handleLogin}>
           <Text
-            style={styles.loginText}
-            onPress={() => {
-              navigation.navigate('HomeScreen');
-            }}>
+            style={styles.loginText}>
             로그인
           </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => { }}>
           <Text style={styles.textInButton}>아이디찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -114,4 +141,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export {LoginScreen};
+export { LoginScreen };

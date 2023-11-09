@@ -1,10 +1,11 @@
 const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
-const date = require("../config/date");
+const date = require("../utils/date");
 const bycrypt = require("bcryptjs"); // 암호화 모듈
-const formatDate = require("../config/date");
-var nowID = "";
+const formatDate = require("../utils/date");
+const authenticateJWT = require("../middleware/authenticate");
+const authorizeRoles = require("../middleware/authorize");
 
 // ID 중복확인
 router.post("/isDuplicated", async (req, res) => {
@@ -37,6 +38,9 @@ router.post("/signUp", async (req, res) => {
     GuardPhone,
     Relationship } = req.body;
 
+    const Notice_hasCompleted = true;
+    const Notice_ifNon = true;
+
   try {
     let user = await User.findOne({ UserPhone });
     if (user) {
@@ -61,7 +65,9 @@ router.post("/signUp", async (req, res) => {
         Game: false,
         Exercise: false,
         Movement: false
-      }
+      },
+      Notice_hasCompleted,
+      Notice_ifNon, // 나중에 디바이스 토큰 값 추가
     });
 
     // 비밀번호 암호화

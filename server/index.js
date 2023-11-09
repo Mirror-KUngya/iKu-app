@@ -11,8 +11,8 @@ const checkListRouter = require('./routes/checkList');
 const settingRouter = require('./routes/setting');
 const detectRouter = require('./routes/detect'); // 인공지능 인식
 const noticeRouter= require('./routes/notice');
-const scheduleJob = require('./service/scheduleJob');
-const sendPushNotification = require('./service/sendPushNotification');
+const scheduleJob = require('./utils/scheduleJob');
+const sendPushNotification = require('./utils/sendPushNotification');
 
 connectDB.mongoDB(); //DB 연결
 

@@ -2,8 +2,8 @@ const admin = require('../config/Firebase');
 const User = require("../models/User");
 const express = require('express');
 const router = express.Router();
-const scheduleJob = require('../service/scheduleJob');
-const sendPushNotification = require('../service/sendPushNotification');
+const scheduleJob = require('../utils/scheduleJob');
+const sendPushNotification = require('../utils/sendPushNotification');
 
 // 토큰 저장 API
 router.post('/token', async (req, res) => {

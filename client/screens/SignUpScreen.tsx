@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Image,
   ScrollView,
@@ -9,21 +9,42 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RootStackParamList} from '../types';
+import { RootStackParamList } from '../types';
 import colors from '../lib/styles/colors';
 import inputState from '../lib/utils/inputState';
 import DatePicker from '../components/DatePicker';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
-const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
+const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [userId, setUserID] = useState('');
+  const [isUserIdAvailable, setIsUserIdAvailable] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userName, setUserName] = useState('');
   const [phone, setPhone] = useState('');
   const [seniorUserId, setSeniorUserID] = useState('');
   const [seniorUserPassword, setSenioeUserPassword] = useState('');
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+
+
+  const checkUserIdAvailability = () => {
+    // 실제 앱에서는 여기서 백엔드 API를 호출하여 확인을 수행합니다.
+    // 예시를 위해 항상 사용 가능하다고 가정합니다.
+    setIsUserIdAvailable(true);
+  };
+  // 나중에 이 함수를 '중복 확인' 버튼의 onPress 이벤트에 연결합니다.
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    setIsPasswordMatch(text === confirmPassword);
+  };
+
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text);
+    setIsPasswordMatch(password === text);
+  };
+
 
   const [userOption, setUserOption] = useState<'보호자 회원' | '노인 회원'>(
     '보호자 회원',
@@ -37,7 +58,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
   });
 
   const handleDateChange = (year: string, month: string, day: string) => {
-    setDate({year, month, day});
+    setDate({ year, month, day });
   };
   return (
     <ScrollView style={styles.container}>
@@ -67,11 +88,14 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
             value={userId}
             onChange={e => setUserID(e.nativeEvent.text)}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={checkUserIdAvailability}>
             <Text style={styles.okText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.confirmText}>사용 가능한 아이디입니다.</Text>
+        {/* <Text style={styles.confirmText}>사용 가능한 아이디입니다.</Text> */}
+        {isUserIdAvailable && (
+          <Text style={styles.confirmText}>사용 가능한 아이디입니다.</Text>
+        )}
         <TextInput
           placeholder="비밀번호"
           style={styles.textInput}
@@ -79,19 +103,29 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
           blurOnSubmit={false}
           secureTextEntry={true}
           value={password}
-          onChange={e => setPassword(e.nativeEvent.text)}
+          onChangeText={handlePasswordChange}
+        //onChange={e => setPassword(e.nativeEvent.text)}
         />
         <TextInput
           placeholder="비밀번호 확인"
           style={styles.textInput}
           returnKeyType={'next'}
-          blurOnSubmit={false}
           secureTextEntry={true}
           value={confirmPassword}
-          onChange={e => setConfirmPassword(e.nativeEvent.text)}
+          onChangeText={handleConfirmPasswordChange} // 변경됨
+        // placeholder="비밀번호 확인"
+        // style={styles.textInput}
+        // returnKeyType={'next'}
+        // blurOnSubmit={false}
+        // secureTextEntry={true}
+        // value={confirmPassword}
+        // onChange={e => setConfirmPassword(e.nativeEvent.text)}
         />
-        <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
-        <View style={{marginTop: 20}}></View>
+        {!isPasswordMatch && (
+          <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
+        )}
+        {/* <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text> */}
+        <View style={{ marginTop: 20 }}></View>
         <Text style={styles.titleText}>회원 정보</Text>
         <View style={styles.rowContainer}>
           <TouchableOpacity
@@ -155,12 +189,12 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
                 onChange={e => setSenioeUserPassword(e.nativeEvent.text)}
               />
               <TouchableOpacity>
-                <Text style={[styles.okText, {margin: 0}]}>검색</Text>
+                <Text style={[styles.okText, { margin: 0 }]}>검색</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.confirmText}>
+            {/* <Text style={styles.confirmText}>
               비밀번호가 일치하지 않습니다.
-            </Text>
+            </Text> */}
           </>
         ) : (
           <>
@@ -175,9 +209,9 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('HomeScreen');
+          navigation.navigate('LoginScreen');
         }}>
-        <Text style={[styles.okText, {marginBottom: 50}]}>회원가입</Text>
+        <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -262,4 +296,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-export {SignUpScreen};
+export { SignUpScreen };

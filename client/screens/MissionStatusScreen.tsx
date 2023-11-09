@@ -16,8 +16,9 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
 
   let missionList = [
     {text: '박수치기', fulFilled: true},
-    {text: '어깨 스트레칭 하기', fulFilled: false},
-    {text: '웃는 표정 짓기', fulFilled: true},
+    {text: '활짝 웃기', fulFilled: true},
+    {text: '옆구리 운동', fulFilled: false},
+    {text: '끝말잇기', fulFilled: false},
   ];
 
   return (

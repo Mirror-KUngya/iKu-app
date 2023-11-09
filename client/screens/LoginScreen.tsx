@@ -10,33 +10,16 @@ import React, { useState } from 'react';
 import colors from '../lib/styles/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import axios from 'axios';
+import handleLogin from '../handleApi/Login';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
 const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
   const [userId, setUserID] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = async () => {
-    console.log("로그인 버튼 눌림");
-    const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/users/signIn';
-    try {
-      const response = await axios.post(SERVER_URL, { UserID:userId, UserPW:password });
-      console.log('UserInfo sent to server successfully');
-      console.log(response.status)
-      // 로그인 성공 처리
-      if (response.status === 200) {
-        console.log('Login successful:', response.data);
-        navigation.navigate('HomeScreen');
-      } else { // 로그인 에러
-        console.log('Login failed:', response.data.message);
-      }
-
-    } catch (error) {
-      console.log('Error sending userINfo to server:', error);
-    }
+  const onLoginPress = () => {
+    handleLogin(userId, password, navigation);
   };
-
   return (
     <View style={styles.container}>
       <Image
@@ -68,7 +51,10 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
       <View>
         <TouchableOpacity
           style={[styles.loginButtonContainer]}
-          onPress={handleLogin}>
+          //onPress={onLoginPress}
+          onPress={() => {
+            navigation.navigate('HomeScreen');
+          }}>
           <Text
             style={styles.loginText}>
             로그인

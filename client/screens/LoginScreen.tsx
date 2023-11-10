@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import colors from '../lib/styles/colors';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types';
 import handleLogin from '../handleApi/Login';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
-const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
+const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
   const [userId, setUserID] = useState('');
   const [password, setPassword] = useState('');
   const onLoginPress = () => {
@@ -55,21 +55,25 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
           onPress={() => {
             navigation.navigate('HomeScreen');
           }}>
-          <Text
-            style={styles.loginText}>
-            로그인
-          </Text>
+          <Text style={styles.loginText}>로그인</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => { }}>
-          <Text style={styles.textInButton}>아이디찾기</Text>
-        </TouchableOpacity>
+      <View>
         <TouchableOpacity
+          style={[styles.loginButtonContainer]}
           onPress={() => {
             navigation.navigate('SignUpScreen');
           }}>
-          <Text style={styles.textInButton}>회원가입</Text>
+          <Text style={[styles.signupText]}>처음이신가요?</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.textInButton}>아이디찾기</Text>
+        </TouchableOpacity>
+        <Text style={styles.textInButton}>|</Text>
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.textInButton}>비밀번호찾기</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -115,11 +119,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: colors.navy,
   },
+  signupText: {
+    width: 300,
+    color: colors.orange,
+    borderColor: colors.orange,
+    borderWidth: 2,
+    backgroundColor: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    padding: 10,
+    borderRadius: 10,
+  },
   buttonContainer: {
     flexDirection: 'row',
     margin: 10,
   },
-  signButton: {},
   textInButton: {
     fontSize: 20,
     marginLeft: 10,
@@ -127,4 +141,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export { LoginScreen };
+export {LoginScreen};

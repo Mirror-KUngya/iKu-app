@@ -7,3 +7,5 @@ export * from './LoginScreen';
 export * from './SettingScreen';
 export * from './MissionStatusScreen';
 export * from './SignUpScreen';
+export * from './FindIdScreen';
+export * from './ChangePasswordScreen';

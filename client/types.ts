@@ -5,4 +5,6 @@ export type RootStackParamList = {
   SettingScreen: undefined;
   MissionStatusScreen: undefined;
   SignUpScreen: undefined;
+  ChangePasswordScreen: undefined;
+  FindIdScreen: undefined;
 };

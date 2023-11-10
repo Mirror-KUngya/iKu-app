@@ -10,11 +10,13 @@ import {
   MissionStatusScreen,
   SettingScreen,
   SignUpScreen,
+  ChangePasswordScreen,
+  FindIdScreen,
 } from './screens';
 
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import axios from 'axios';
-import getToken from './getToken'
+import getToken from './getToken';
 
 const SERVER_URL = 'http://192.168.64.19:3000/notice/token';
 
@@ -34,7 +36,6 @@ const SERVER_URL = 'http://192.168.64.19:3000/notice/token';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
-
   // useEffect(() => {
   //   const fetchToken = async () => {
   //     const token = await getToken();
@@ -105,6 +106,18 @@ function App(): JSX.Element {
           component={MissionStatusScreen}
           options={{
             title: '미션 현황',
+          }}></Stack.Screen>
+        <Stack.Screen
+          name="ChangePasswordScreen"
+          component={ChangePasswordScreen}
+          options={{
+            title: '비밀번호 변경',
+          }}></Stack.Screen>
+        <Stack.Screen
+          name="FindIdScreen"
+          component={FindIdScreen}
+          options={{
+            title: '아이디 찾기',
           }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

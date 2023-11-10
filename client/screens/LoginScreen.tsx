@@ -68,12 +68,18 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('FindIdScreen');
+          }}>
           <Text style={styles.textInButton}>아이디찾기</Text>
         </TouchableOpacity>
         <Text style={styles.textInButton}>|</Text>
-        <TouchableOpacity onPress={() => {}}>
-          <Text style={styles.textInButton}>비밀번호찾기</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ChangePasswordScreen');
+          }}>
+          <Text style={styles.textInButton}>비밀번호변경</Text>
         </TouchableOpacity>
       </View>
     </View>

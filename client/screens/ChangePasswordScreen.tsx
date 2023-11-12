@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import colors from '../lib/styles/colors';
 import {useState} from 'react';
+import resetPW from '../handleApi/User/resetPW';
+import {Alert} from 'react-native';
 
 type ChangePasswordProps = NativeStackScreenProps<
   RootStackParamList,
@@ -58,8 +60,16 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({navigation}) => {
         />
         <TouchableOpacity
           style={[styles.buttonContainer]}
-          onPress={() => {
-            setHideFirstScreen(true);
+          onPress={async() => {
+            try {
+              await resetPW(inputId, inputPhone, inputNewPassword);
+              setResult(true);
+              setHideFirstScreen(true);
+            } catch(error) {
+              Alert.alert("비밀번호 변경 중 오류가 발생했습니다.");
+              setResult(false);
+              setHideFirstScreen(false);
+            }
           }}>
           <Text style={styles.buttonText}>변경</Text>
         </TouchableOpacity>

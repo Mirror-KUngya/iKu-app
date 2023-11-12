@@ -1,5 +1,5 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types';
 import {
   Image,
   StyleSheet,
@@ -9,11 +9,12 @@ import {
   View,
 } from 'react-native';
 import colors from '../lib/styles/colors';
-import {useState} from 'react';
+import { useState } from 'react';
+import findID from '../handleApi/User/findID';
 
 type FindIdProps = NativeStackScreenProps<RootStackParamList, 'FindIdScreen'>;
 
-const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
+const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
   const [inputName, setInputName] = useState('');
   const [inputPhone, setInputPhone] = useState('');
   const [hideFirstScreen, setHideFirstScreen] = useState(false); // 첫 화면 숨기기
@@ -44,8 +45,15 @@ const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
         />
         <TouchableOpacity
           style={[styles.buttonContainer]}
-          onPress={() => {
-            setHideFirstScreen(true);
+          onPress={async () => {
+            try {
+              const id = await findID(inputName, inputPhone);
+              setUserId(userId);
+              setResult(true);
+              setHideFirstScreen(true);
+            } catch (error) {
+              console.log(error)
+            }
           }}>
           <Text style={styles.buttonText}>찾기</Text>
         </TouchableOpacity>
@@ -65,12 +73,12 @@ const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
               회원님의 아이디는{'\n'}
               {userId}입니다.
             </Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('LoginScreen');
                 }}>
-                <Text style={[styles.buttonText, {width: 160}]}>
+                <Text style={[styles.buttonText, { width: 160 }]}>
                   로그인 하러 가기
                 </Text>
               </TouchableOpacity>
@@ -78,7 +86,7 @@ const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
                 onPress={() => {
                   navigation.navigate('ChangePasswordScreen');
                 }}>
-                <Text style={[styles.buttonText, {width: 160}]}>
+                <Text style={[styles.buttonText, { width: 160 }]}>
                   비밀번호변경
                 </Text>
               </TouchableOpacity>
@@ -93,12 +101,12 @@ const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
             <Text style={styles.titleText}>
               존재하지 않는{'\n'}회원 정보입니다.
             </Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => {
                   setHideFirstScreen(false);
                 }}>
-                <Text style={[styles.buttonText, {width: 160}]}>
+                <Text style={[styles.buttonText, { width: 160 }]}>
                   이전 페이지로
                 </Text>
               </TouchableOpacity>
@@ -106,7 +114,7 @@ const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
                 onPress={() => {
                   navigation.navigate('LoginScreen');
                 }}>
-                <Text style={[styles.buttonText, {width: 160}]}>
+                <Text style={[styles.buttonText, { width: 160 }]}>
                   로그인 하러 가기
                 </Text>
               </TouchableOpacity>
@@ -163,4 +171,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
   },
 });
-export {FindIdScreen};
+export { FindIdScreen };

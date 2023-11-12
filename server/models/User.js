@@ -11,8 +11,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     UserAddress: {
-        type: String,
-        required: true
+        type: String
     },
     UserID: {
         type: String,
@@ -36,16 +35,14 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     UserType: {
-        type: Number,
+        type: String, // 노인인지 보호자인지
         required: true
     },
     GuardPhone: {
-        type: String,
-        required: true
+        type: String
     },
     Relationship: {
-        type: String,
-        required: true
+        type: String
     },
     Mission: [{
         MissionDate: {
@@ -53,19 +50,54 @@ const UserSchema = new mongoose.Schema({
             unique: true,
             required: true
         },
-        Smile: {
+        Clap: {
             type: Boolean
         },
-        Game: {
+        Smile: {
             type: Boolean
         },
         Exercise: {
             type: Boolean
         },
-        Movement: {
+        WordChain: {
             type: Boolean
         }
     }],
+    Gaurd: {
+        GaurdName: {
+            type: String
+        },
+        GuardID: {
+            type: String
+        },
+        GuardPW: {
+            type: String
+        },
+        GuardPhone: {
+            type: String
+        },
+        UserType: {
+            type: String
+        },
+        RelationshipWithSilver: {
+            type: String
+        },
+        SilverID: {
+            type: String
+        },
+        SilverPW: {
+            type: String
+        },
+        Notice_hasCompleted: { // 미션 완료 시 푸쉬 알림 여부
+            type: Boolean
+        },
+        Notice_ifNon: { // 감지 없을 시 푸쉬 알림 여부
+            type: Boolean
+        },
+        Device_token: { // FCM 디바이스 토큰
+            type: String
+        }
+    },
     Notice_hasCompleted: { // 미션 완료 시 푸쉬 알림 여부
         type: Boolean
     },

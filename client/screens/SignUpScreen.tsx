@@ -13,6 +13,8 @@ import { RootStackParamList } from '../types';
 import colors from '../lib/styles/colors';
 import inputState from '../lib/utils/inputState';
 import DatePicker from '../components/DatePicker';
+import checkDuplication from '../handleApi/CheckList/checkDuplication';
+import signUp from '../handleApi/User/signUp';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
@@ -25,16 +27,11 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [phone, setPhone] = useState('');
   const [seniorUserId, setSeniorUserID] = useState('');
   const [seniorUserPassword, setSenioeUserPassword] = useState('');
+  const [userAddress, setUserAddress] = useState('');
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+  const [relationshipWithSilver, setRelationshipWithSilver] = useState('');
 
-
-  const checkUserIdAvailability = () => {
-    // 실제 앱에서는 여기서 백엔드 API를 호출하여 확인을 수행합니다.
-    // 예시를 위해 항상 사용 가능하다고 가정합니다.
-    setIsUserIdAvailable(true);
-  };
-  // 나중에 이 함수를 '중복 확인' 버튼의 onPress 이벤트에 연결합니다.
-
+  
   const handlePasswordChange = (text: string) => {
     setPassword(text);
     setIsPasswordMatch(text === confirmPassword);
@@ -45,7 +42,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
     setIsPasswordMatch(password === text);
   };
 
-
+  // 노인 회원인지 보호자 회원인지
   const [userOption, setUserOption] = useState<'보호자 회원' | '노인 회원'>(
     '보호자 회원',
   );
@@ -88,11 +85,20 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
             value={userId}
             onChange={e => setUserID(e.nativeEvent.text)}
           />
-          <TouchableOpacity onPress={checkUserIdAvailability}>
+          <TouchableOpacity onPress = {
+            async () => {
+              try {
+                const isDuplicated = checkDuplication(userId);
+                setIsUserIdAvailable(!isDuplicated);
+              } catch(error) {
+                console.log("아이디 중복확인 실패");
+                console.log(error);
+              }
+            }
+          }>
             <Text style={styles.okText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
-        {/* <Text style={styles.confirmText}>사용 가능한 아이디입니다.</Text> */}
         {isUserIdAvailable && (
           <Text style={styles.confirmText}>사용 가능한 아이디입니다.</Text>
         )}
@@ -104,7 +110,6 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
           secureTextEntry={true}
           value={password}
           onChangeText={handlePasswordChange}
-        //onChange={e => setPassword(e.nativeEvent.text)}
         />
         <TextInput
           placeholder="비밀번호 확인"
@@ -113,18 +118,10 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
           secureTextEntry={true}
           value={confirmPassword}
           onChangeText={handleConfirmPasswordChange} // 변경됨
-        // placeholder="비밀번호 확인"
-        // style={styles.textInput}
-        // returnKeyType={'next'}
-        // blurOnSubmit={false}
-        // secureTextEntry={true}
-        // value={confirmPassword}
-        // onChange={e => setConfirmPassword(e.nativeEvent.text)}
         />
         {!isPasswordMatch && (
           <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
         )}
-        {/* <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text> */}
         <View style={{ marginTop: 20 }}></View>
         <Text style={styles.titleText}>회원 정보</Text>
         <View style={styles.rowContainer}>
@@ -168,6 +165,14 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
           value={phone}
           onChange={e => setPhone(e.nativeEvent.text)}
         />
+        <TextInput
+          placeholder="거주지 주소"
+          style={styles.textInput}
+          returnKeyType={'next'}
+          blurOnSubmit={false}
+          value={userAddress}
+          onChange={e => setUserAddress(e.nativeEvent.text)}
+        />
         {userOption === '보호자 회원' ? (
           <>
             <TextInput
@@ -188,7 +193,16 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
                 value={seniorUserPassword}
                 onChange={e => setSenioeUserPassword(e.nativeEvent.text)}
               />
+              <TextInput
+                placeholder="노인회원과의 관계"
+                style={styles.textInput}
+                returnKeyType={'next'}
+                blurOnSubmit={false}
+                value={relationshipWithSilver}
+                onChange={e => setRelationshipWithSilver(e.nativeEvent.text)}
+              />
               <TouchableOpacity>
+                onPress =
                 <Text style={[styles.okText, { margin: 0 }]}>검색</Text>
               </TouchableOpacity>
             </View>
@@ -209,7 +223,11 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('LoginScreen');
+          if (userOption === "노인 회원") {
+            signUp()
+          } else {
+
+          }
         }}>
         <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>
       </TouchableOpacity>

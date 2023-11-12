@@ -1,4 +1,4 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Image,
   StyleSheet,
@@ -7,24 +7,38 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RootStackParamList} from '../types';
-import {CheckListItem} from '../components/CheckListItem';
+import { RootStackParamList } from '../types';
+import { CheckListItem } from '../components/CheckListItem';
 import colors from '../lib/styles/colors';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getCheckList from '../handleApi/CheckList/checkList';
 
 type CheckListProps = NativeStackScreenProps<
   RootStackParamList,
   'CheckListScreen'
 >;
-let checkList = [
-  {text: '가스 벨브 잠그기', fulFilled: true},
-  {text: '창문 닫기', fulFilled: false},
-];
-const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
+
+const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
+
+  const [userId, setUserId] = useState<string | null> (null);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const retrievedUserId = await AsyncStorage.getItem('userId');
+        setUserId(retrievedUserId);
+      } catch(error) {
+        console.log("아이디 가져오기 실패...", error);
+      }
+    };
+    fetchUserId();
+  }, []);// 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
+
   // 체크리스트 배열에 대한 상태
   const [checkList, setCheckList] = useState([
-    //{text: '가스 벨브 잠그기', fulFilled: true},
-    //{text: '창문 닫기', fulFilled: true},
+    { text: '가스 벨브 잠그기', fulFilled: true },
+    { text: '창문 닫기', fulFilled: true },
   ]);
 
   // TextInput 값에 대한 상태
@@ -38,14 +52,11 @@ const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
       setNewCheckListItem(''); // 항목을 추가한 후 TextInput을 지웁니다
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.addContainer}>
         <TextInput
-          // placeholder="추가하기..."
-          // style={styles.textInput}
-          // returnKeyType={'next'}
           placeholder="추가하기..."
           style={styles.textInput}
           value={newCheckListItem}
@@ -58,7 +69,7 @@ const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View>
-        {checkList.map(({text, fulFilled}, idx) => (
+        {checkList.map(({ text, fulFilled }, idx) => (
           <CheckListItem
             key={idx}
             text={text}
@@ -102,4 +113,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export {CheckListScreen};
+export { CheckListScreen };

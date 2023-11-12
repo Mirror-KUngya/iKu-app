@@ -1,22 +1,51 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Switch} from 'react-native-switch';
-import {RootStackParamList} from '../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Switch } from 'react-native-switch';
+import { RootStackParamList } from '../types';
 import colors from '../lib/styles/colors';
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import getUserInfo from '../handleApi/Setting/getUserInfo';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type SettingProps = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>;
 
-const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
-  const [userName, setUserName] = useState('김아빠');
-  const [userType, setUerType] = useState('노인');
-  const [userDevice, setUserDevice] = useState('123.456.7.8');
-  const [emergencyList, setEmergencyList] = useState({
-    target: '큰아들',
-    phone: '010-1234-5678',
-  });
-  const [isEnabled, setIsEnabled] = useState(false);
+const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
+
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const retrievedUserId = await AsyncStorage.getItem('userId');
+        setUserId(retrievedUserId);
+      } catch (error) {
+        console.log("아이디 가져오기 실패...", error);
+      }
+    };
+    fetchUserId();
+  }, []);// 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
+
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userType, setUserType] = useState<string | null>(null);
+  const [userPhone, setUserPhone] = useState<string | null>(null);
+
+  type EmergencyListType = {
+    target: string;
+    phone: string;
+  };
+  const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(null); const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const setting = async () => {
+    try {
+      const info = await getUserInfo();
+      setUserName(info.UserName);
+      setUserType(info.UserType);
+      setUserPhone(info.UserPhone);
+      setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -27,7 +56,7 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.keyText}>연결 기기</Text>
-          <Text style={styles.valueText}>{userDevice}</Text>
+          <Text style={styles.valueText}>{userPhone}</Text>
           <TouchableOpacity>
             <Text style={styles.postText}>변경</Text>
           </TouchableOpacity>
@@ -41,8 +70,14 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.innerContainer}>
-          <Text style={styles.keyText}>{emergencyList.target}</Text>
-          <Text style={styles.valueText}>{emergencyList.phone}</Text>
+          {
+            emergencyList && (
+              <>
+                <Text style={styles.keyText}>{emergencyList.target}</Text>
+                <Text style={styles.valueText}>{emergencyList.phone}</Text>
+              </>
+            )
+          }
           <TouchableOpacity>
             <Text style={styles.postText}>수정</Text>
           </TouchableOpacity>
@@ -160,4 +195,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export {SettingScreen};
+export { SettingScreen };

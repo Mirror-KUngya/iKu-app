@@ -9,8 +9,9 @@ const router = express.Router();
 // mission 날짜 조회 시 예외 발생 시 해당 날짜 data 삽입
 // -> 수정 필요: cron 작업으로 00시 되면 해당 날짜 data 삽입
 // res에 날짜, 미션 완료 여부
-router.get("/", async (req, res) => {
-    const { UserID, MissionDate } = req.body;
+router.get("/:UserID/:MissionDate", async (req, res) => {
+    const UserID = req.params.UserID;
+    const MissionDate = req.params.MissionDate;
 
     try {
         const user = await User.findOne({ "UserID": UserID });

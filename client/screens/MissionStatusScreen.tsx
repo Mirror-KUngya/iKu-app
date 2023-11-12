@@ -15,8 +15,8 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
   const [pickDate, setPickDate] = useState(new Date());
 
   let missionList = [
-    {text: '박수치기', fulFilled: true},
-    {text: '활짝 웃기', fulFilled: true},
+    {text: '박수치기', fulFilled: false},
+    {text: '활짝 웃기', fulFilled: false},
     {text: '옆구리 운동', fulFilled: false},
     {text: '끝말잇기', fulFilled: false},
   ];

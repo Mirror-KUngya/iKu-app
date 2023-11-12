@@ -10,7 +10,7 @@ import React, {useState} from 'react';
 import colors from '../lib/styles/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
-import handleLogin from '../handleApi/Login';
+import handleLogin from '../handleApi/User/login';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 

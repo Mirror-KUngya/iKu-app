@@ -9,7 +9,7 @@ async function addCheckList(userId, toDo) {
         console.log('CheckList Info sent to server successfully');
         console.log(response.status)
         
-        if (response.status === 200) {
+        if (response.status === 201) {
             console.log("입력하신 체크리스트 항목이 추가되었습니다.");
         } else { 
             console.log("입력하신 체크리스트 항목이 추가에 실패했습니다.");

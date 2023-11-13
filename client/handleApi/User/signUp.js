@@ -1,18 +1,20 @@
 import axios from 'axios';
 
-async function signUp(userId, password, userType, userName, userPhone, birthYear, birthMonth, birthDay) { 
-    console.log("회원가입 버튼");
+async function signUp (userName, userPhone, userAddress, userId, password, birthYear, birthMonth, birthDay,userType, guardPhone) { 
+    console.log("회원가입");
     const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/users/signUp';
     try {
         const response = await axios.post(SERVER_URL, {
-            UserID: userId,
-            UserPW: password,
-            UserType: userType,
             UserName: userName,
             UserPhone: userPhone,
+            UserAddress: userAddress,
+            UserID: userId,
+            UserPW: password,
             BirthYear: birthYear,
             BirthMonth: birthMonth,
-            BirthDay: birthDay
+            BirthDay: birthDay,
+            UserType: userType,
+            GuardPhone: guardPhone
         });
         console.log('Login UserInfo sent to server successfully');
         console.log(response.status)
@@ -21,11 +23,11 @@ async function signUp(userId, password, userType, userName, userPhone, birthYear
             console.log('회원가입 성공');
             return true;
         } else { // 로그인 에러
-            console.log('Login failed:', response.data.message);
-            // 토스트 메시지
+            console.log('회원가입 실패:', response.data.message);
+//            Alert.alert("정보를 다시 입력해주세요.");
         }
     } catch (error) {
-        console.log('Error sending userINfo to server:', error);
+        console.log('Error sending userIㅜfo to server:', error);
     }
 }
 

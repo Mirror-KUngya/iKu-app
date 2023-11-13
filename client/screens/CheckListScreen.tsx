@@ -12,7 +12,8 @@ import { CheckListItem } from '../components/CheckListItem';
 import colors from '../lib/styles/colors';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getCheckList from '../handleApi/CheckList/checkList';
+import getCheckList from '../handleApi/CheckList/getCheckList';
+import addCheckList from '../handleApi/CheckList/addCheckList';
 
 type CheckListProps = NativeStackScreenProps<
   RootStackParamList,
@@ -22,7 +23,14 @@ type CheckListProps = NativeStackScreenProps<
 const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
 
   const [userId, setUserId] = useState<string | null> (null);
-
+  interface CheckListItem {
+    toDo: string; // 서버 스키마에 맞게 toDo 프로퍼티 추가
+  }
+  // 체크리스트 배열에 대한 상태
+  const [checkList, setCheckList] = useState<CheckListItem[]>([]);
+  // TextInput 값에 대한 상태
+  const [newCheckListItem, setNewCheckListItem] = useState('');
+  
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -35,19 +43,24 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
     fetchUserId();
   }, []);// 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
 
-  // 체크리스트 배열에 대한 상태
-  const [checkList, setCheckList] = useState([
-    { text: '가스 벨브 잠그기', fulFilled: true },
-    { text: '창문 닫기', fulFilled: true },
-  ]);
+  useEffect(() => {
+    const fetchCheckList = async () => {
+      if (userId) {
+        const fetchedList = await getCheckList(userId);
+        if (fetchedList) {
+          setCheckList(fetchedList);
+        }
+      }
+    };
 
-  // TextInput 값에 대한 상태
-  const [newCheckListItem, setNewCheckListItem] = useState('');
+    fetchCheckList();
+  }, [userId]); // userId가 변경될 때마다 실행
 
   // 새 항목을 체크리스트에 추가하는 함수
   const handleAddItem = () => {
     if (newCheckListItem.trim() !== '') {
-      const newItem = { text: newCheckListItem, fulFilled: false };
+      const newItem: CheckListItem = { toDo: newCheckListItem };
+      addCheckList(userId, newCheckListItem)
       setCheckList([...checkList, newItem]);
       setNewCheckListItem(''); // 항목을 추가한 후 TextInput을 지웁니다
     }
@@ -69,12 +82,13 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View>
-        {checkList.map(({ text, fulFilled }, idx) => (
-          <CheckListItem
-            key={idx}
-            text={text}
-            isFulfilled={fulFilled}></CheckListItem>
-        ))}
+        {checkList.length > 0 ? (
+          checkList.map((item, idx) => (
+            <CheckListItem key={idx} text={item.toDo}></CheckListItem> // 수정된 prop
+          ))
+        ) : (
+          <Text>체크리스트가 비어있습니다.</Text>
+        )}
       </View>
     </View>
   );

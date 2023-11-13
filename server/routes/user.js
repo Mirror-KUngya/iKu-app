@@ -4,8 +4,8 @@ const router = express.Router();
 const date = require("../utils/date");
 const bycrypt = require("bcryptjs"); // 암호화 모듈
 const formatDate = require("../utils/date");
-const authenticateJWT = require("../middleware/authenticate");
-const authorizeRoles = require("../middleware/authorize");
+//const authenticateJWT = require("../middleware/authenticate");
+//const authorizeRoles = require("../middleware/authorize");
 
 // ID 중복확인
 router.post("/isDuplicated", async (req, res) => {
@@ -50,6 +50,7 @@ router.post("/signUp", async (req, res) => {
     BirthMonth,
     BirthDay,
     UserType,
+    GuardPhone
   } = req.body;
 
   try {
@@ -61,19 +62,20 @@ router.post("/signUp", async (req, res) => {
     user = new User({
       UserName: UserName,
       UserPhone: UserPhone,
-      // UserAddress,
+      UserAddress: UserAddress,
       UserID: UserID,
       UserPW: UserPW,
       BirthYear: BirthYear,
       BirthMonth: BirthMonth,
       BirthDay: BirthDay,
       UserType: UserType,
+      GuardPhone: GuardPhone,
       Mission: {
         MissionDate: date.formatDate(),
+        Clap: false,
         Smile: false,
-        Game: false,
         Exercise: false,
-        Movement: false
+        WordChain: false
       },
       Notice_hasCompleted: true,
       Notice_ifNon: true, // 나중에 디바이스 토큰 값 추가
@@ -153,6 +155,23 @@ router.post("/signIn", async (req, res) => {
     return res.status(500).json({ "error": error.message });
   }
 });
+
+// 이름 조회
+router.get("/:UserID", async (req, res) => {
+  try {
+    const UserID = req.params.UserID;
+    const user = await User.findOne({ UserID: UserID });
+    if (user) {
+      return res.status(200).json({
+        UserID: UserID,
+        UserName: user.UserName
+      });
+    }
+    return res.status(404).json({ "message": "User does not exist." });
+  } catch (error) {
+    return res.status(500).json({ "error": error.message });
+  }
+})
 
 // 아이디 찾기
 router.post("/findID", async (req, res) => {

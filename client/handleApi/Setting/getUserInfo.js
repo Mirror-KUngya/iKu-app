@@ -2,8 +2,7 @@ import axios from 'axios';
 import {Alert} from 'react-native';
 
 async function getUserInfo(userId) {
-    console.log("사용자 정보 세팅");
-    const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/setting';
+    const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/setting/' + userId;
     try {
         const response = await axios.get(SERVER_URL, { UserID: userId});
         console.log('UserInfo sent to server successfully');

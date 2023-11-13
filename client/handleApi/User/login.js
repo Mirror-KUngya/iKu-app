@@ -15,10 +15,10 @@ async function handleLogin(userId, password, navigation) {
             AsyncStorage.setItem('userId', response.data.UserID);
             AsyncStorage.setItem('userName', response.data.UserName)
             navigation.navigate('HomeScreen'); // 여기서 navigation 사용
-        } else { // 로그인 에러
+        } else if (response.status === 202) { // 로그인 에러
             console.log('Login failed:', response.data.message);
             // 토스트 메시지
-            Alert.alert("아이디나 비밀번호를 다시 확인해주세요.", response.data.message);
+            Alert.alert("아이디나 비밀번호를 다시 확인해주세요.");
         }
     } catch (error) {
         console.log('Error sending userInfo to server:', error);

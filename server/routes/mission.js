@@ -20,7 +20,7 @@ router.get("/:UserID/:MissionDate", async (req, res) => {
         }
         let mission = user.Mission.find(m => m.MissionDate === MissionDate);
         if (!mission) {
-            mission = { MissionDate: MissionDate, Smile: false, Game: false, Exercise: false, Movement: false };
+            mission = { MissionDate: MissionDate, Clap: false, Smile: false, Exercise: false, WordChain: false };
             user.Mission.push(mission);
             await user.save();
         }
@@ -41,11 +41,12 @@ router.put("/", async (req, res) => {
             "UserID": UserID,
             "Mission.MissionDate": MissionDate
         },
-        {
-            $set: {
-                ["Mission.$." + completeMission]: true
+            {
+                $set: {
+                    ["Mission.$." + completeMission]: true
+                }
             }
-        });
+        );
 
         if (result.matchedCount === 0) {
             return res.status(404).json({ "message": "User or Mission not found" });

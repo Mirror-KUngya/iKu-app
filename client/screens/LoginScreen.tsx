@@ -51,10 +51,11 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
       <View>
         <TouchableOpacity
           style={[styles.loginButtonContainer]}
-          //onPress={onLoginPress}
-          onPress={() => {
-            navigation.navigate('HomeScreen');
-          }}>
+          onPress={onLoginPress}
+          // onPress={() => {
+          //   navigation.navigate('HomeScreen');
+          // }}
+          >
           <Text style={styles.loginText}>로그인</Text>
         </TouchableOpacity>
       </View>

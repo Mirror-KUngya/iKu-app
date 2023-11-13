@@ -17,6 +17,7 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
       try {
         const retrievedUserId = await AsyncStorage.getItem('userId');
         setUserId(retrievedUserId);
+        console.log("현재 아이디", userId);
       } catch (error) {
         console.log("아이디 가져오기 실패...", error);
       }
@@ -35,27 +36,30 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
   const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(null); const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-  const setting = async () => {
-    try {
-      const info = await getUserInfo();
-      setUserName(info.UserName);
-      setUserType(info.UserType);
-      setUserPhone(info.UserPhone);
-      setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    const setting = async () => {
+      try {
+        const info = await getUserInfo(userId);
+        setUserName(info.UserName);
+        setUserType(info.UserType);
+        setUserPhone(info.UserPhone);
+        setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    setting();
+  }, [userId]); // 의존성 배열
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.userInfoContainer}>
           <Text style={styles.titleText}>{userName} 님</Text>
-          <Text style={styles.middleText}>{userType} 회원</Text>
+          <Text style={styles.middleText}>{userType}</Text>
         </View>
         <View style={styles.innerContainer}>
-          <Text style={styles.keyText}>연결 기기</Text>
+          <Text style={styles.keyText}>핸드폰 번호</Text>
           <Text style={styles.valueText}>{userPhone}</Text>
           <TouchableOpacity>
             <Text style={styles.postText}>변경</Text>

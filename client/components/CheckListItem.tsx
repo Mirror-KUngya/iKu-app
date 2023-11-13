@@ -1,22 +1,23 @@
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Foundation';
+import {StyleSheet, Text, View} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import colors from '../lib/styles/colors';
 
-const CheckListItem = ({text = '가스 벨브 잠그기', isFulfilled = true}) => {
+const CheckListItem = ({
+  text,
+  onDelete,
+}: {
+  text: string;
+  onDelete: (t: string) => void;
+}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>
-      {isFulfilled ? (
-        <Icon name="check" size={32} color={colors.darkGreen} />
-      ) : (
-        <Icon name="x" size={32} color="red" />
-      )}
+      <Icon
+        name="xmark"
+        size={32}
+        color={'red'}
+        onPress={e => onDelete(text)}
+      />
     </View>
   );
 };
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   text: {
-    fontSize: 16,
+    fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
     alignSelf: 'center',

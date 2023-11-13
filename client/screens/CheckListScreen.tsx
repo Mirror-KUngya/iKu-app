@@ -1,28 +1,27 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
-  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RootStackParamList } from '../types';
-import { CheckListItem } from '../components/CheckListItem';
+import {RootStackParamList} from '../types';
+import {CheckListItem} from '../components/CheckListItem';
 import colors from '../lib/styles/colors';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getCheckList from '../handleApi/CheckList/getCheckList';
 import addCheckList from '../handleApi/CheckList/addCheckList';
+import deleteCheckList from '../handleApi/CheckList/deleteCheckList';
 
 type CheckListProps = NativeStackScreenProps<
   RootStackParamList,
   'CheckListScreen'
 >;
 
-const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
-
-  const [userId, setUserId] = useState<string | null> (null);
+const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
+  const [userId, setUserId] = useState<string | null>(null);
   interface CheckListItem {
     toDo: string; // 서버 스키마에 맞게 toDo 프로퍼티 추가
   }
@@ -30,18 +29,19 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
   const [checkList, setCheckList] = useState<CheckListItem[]>([]);
   // TextInput 값에 대한 상태
   const [newCheckListItem, setNewCheckListItem] = useState('');
-  
+  const [deleteTarget, setDeleteTarget] = useState<null | string>(null);
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const retrievedUserId = await AsyncStorage.getItem('userId');
         setUserId(retrievedUserId);
-      } catch(error) {
-        console.log("아이디 가져오기 실패...", error);
+      } catch (error) {
+        console.log('아이디 가져오기 실패...', error);
       }
     };
     fetchUserId();
-  }, []);// 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
+  }, []); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
 
   useEffect(() => {
     const fetchCheckList = async () => {
@@ -59,10 +59,17 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
   // 새 항목을 체크리스트에 추가하는 함수
   const handleAddItem = () => {
     if (newCheckListItem.trim() !== '') {
-      const newItem: CheckListItem = { toDo: newCheckListItem };
-      addCheckList(userId, newCheckListItem)
+      const newItem: CheckListItem = {toDo: newCheckListItem};
+      addCheckList(userId, newCheckListItem);
       setCheckList([...checkList, newItem]);
       setNewCheckListItem(''); // 항목을 추가한 후 TextInput을 지웁니다
+    }
+  };
+
+  const handleDeleteItem = async (text: string) => {
+    setDeleteTarget(text);
+    if (userId) {
+      const response = await deleteCheckList(userId, text);
     }
   };
 
@@ -70,7 +77,7 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.addContainer}>
         <TextInput
-          placeholder="추가하기..."
+          placeholder="체크리스트를 직접 추가해보세요"
           style={styles.textInput}
           value={newCheckListItem}
           onChangeText={setNewCheckListItem} // 텍스트 변경시 상태 업데이트
@@ -84,7 +91,10 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
       <View>
         {checkList.length > 0 ? (
           checkList.map((item, idx) => (
-            <CheckListItem key={idx} text={item.toDo}></CheckListItem> // 수정된 prop
+            <CheckListItem
+              key={idx}
+              text={item.toDo}
+              onDelete={handleDeleteItem}></CheckListItem> // 수정된 prop
           ))
         ) : (
           <Text>체크리스트가 비어있습니다.</Text>
@@ -93,6 +103,8 @@ const CheckListScreen: React.FC<CheckListProps> = ({ navigation }) => {
     </View>
   );
 };
+const width_proportion = '80%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -108,7 +120,7 @@ const styles = StyleSheet.create({
   textInput: {
     borderColor: colors.navy,
     borderBottomWidth: 1,
-    width: 250,
+    width: width_proportion,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'gray',
@@ -127,4 +139,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export { CheckListScreen };
+export {CheckListScreen};

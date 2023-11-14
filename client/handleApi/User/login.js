@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setID } from './setid';
 
 async function handleLogin(userId, password, navigation) {
     console.log("로그인 버튼 눌림");
@@ -13,15 +14,19 @@ async function handleLogin(userId, password, navigation) {
         if (response.status === 200) {
             console.log('Login successful:', response.data);
             AsyncStorage.setItem('userId', response.data.UserID);
-            AsyncStorage.setItem('userName', response.data.UserName)
-            navigation.navigate('HomeScreen'); // 여기서 navigation 사용
+            AsyncStorage.setItem('userName', response.data.UserName);
+            //navigation.navigate('HomeScreen'); // 여기서 navigation 사용
+            return true;
         } else if (response.status === 202) { // 로그인 에러
             console.log('Login failed:', response.data.message);
             // 토스트 메시지
             Alert.alert("아이디나 비밀번호를 다시 확인해주세요.");
+            return false;
         }
+        return false;
     } catch (error) {
         console.log('Error sending userInfo to server:', error);
+        return false;
     }
 }
 

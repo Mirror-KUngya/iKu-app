@@ -14,11 +14,11 @@ async function findID(userName, userPhone) {
             return response.data.UserID;
         } else {
             console.log('Login failed:', response.data.message);
-            // 토스트 메시지
-            Alert.alert("존재하지 않는 회원입니다.");
+            return null;
         }
     } catch (error) {
         console.log('Error sending userInfo to server:', error);
+        return null;
     }
 }
 

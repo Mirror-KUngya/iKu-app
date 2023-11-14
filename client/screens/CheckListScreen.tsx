@@ -66,12 +66,17 @@ const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
     }
   };
 
-  const handleDeleteItem = async (text: string) => {
-    setDeleteTarget(text);
+  const handleDeleteItem = async (toDo: string) => {
     if (userId) {
-      const response = await deleteCheckList(userId, text);
+      try {
+        await deleteCheckList(userId, toDo); // 서버에 삭제 요청
+        const updatedList = checkList.filter(item => item.toDo !== toDo); // 삭제된 아이템을 제외한 새 리스트 생성
+        setCheckList(updatedList); // 상태 업데이트
+      } catch (error) {
+        console.log("삭제 중 오류 발생: ", error);
+      }
     }
-  };
+  };  
 
   return (
     <View style={styles.container}>

@@ -24,10 +24,11 @@ async function signUp (userName, userPhone, userAddress, userId, password, birth
             return true;
         } else { // 로그인 에러
             console.log('회원가입 실패:', response.data.message);
-//            Alert.alert("정보를 다시 입력해주세요.");
+            return false;
         }
     } catch (error) {
         console.log('Error sending userIㅜfo to server:', error);
+        return false;
     }
 }
 

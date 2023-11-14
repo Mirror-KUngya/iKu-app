@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function signUpGaurd(userId, password, userType, userName, userPhone, birthYear, birthMonth, birthDay) { 
+async function signUpGaurd(userId, password, userType, userName, userPhone, seniorId, seniorpw) { 
     console.log("회원가입 - 보호자");
     const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/users/signUpGaurd';
     try {
@@ -10,9 +10,9 @@ async function signUpGaurd(userId, password, userType, userName, userPhone, birt
             UserType: userType,
             UserName: userName,
             UserPhone: userPhone,
-            BirthYear: birthYear,
-            BirthMonth: birthMonth,
-            BirthDay: birthDay
+            RelationshipWithSilver,
+            SilverID:seniorId,
+            SilverPW:seniorpw
         });
         console.log('Login UserInfo sent to server successfully');
         console.log(response.status)
@@ -23,9 +23,11 @@ async function signUpGaurd(userId, password, userType, userName, userPhone, birt
         } else { // 로그인 에러
             console.log('Login failed:', response.data.message);
             // 토스트 메시지
+            return false;
         }
     } catch (error) {
         console.log('Error sending userINfo to server:', error);
+        return false;
     }
 }
 

@@ -12,45 +12,57 @@ type SettingProps = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>;
 const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
 
   const [userId, setUserId] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const retrievedUserId = await AsyncStorage.getItem('userId');
-        setUserId(retrievedUserId);
-        console.log("현재 아이디", userId);
+        if (retrievedUserId !== null) {
+          setUserId(retrievedUserId);
+        }
       } catch (error) {
         console.log("아이디 가져오기 실패...", error);
       }
     };
     fetchUserId();
-  }, []);// 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행
-
+  }, []);
+  
+  useEffect(() => {
+    console.log("현재 아이디", userId);
+  }, [userId]); // userId 상태가 변경될 때마다 실행
+  
+  useEffect(() => {
+    const setting = async () => {
+      try {
+        if (userId) {
+          const info = await getUserInfo(userId);
+          if (info) {
+            console.log(info);
+            setUserName(info.UserName);
+            setUserType(info.UserType);
+            setUserPhone(info.UserPhone);
+            setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    setting();
+  }, [userId]); // userId 의존성 추가
+  
   const [userName, setUserName] = useState<string | null>(null);
   const [userType, setUserType] = useState<string | null>(null);
   const [userPhone, setUserPhone] = useState<string | null>(null);
+  const [GuardPhone, setGuardPhone] = useState<string | null>(null);
 
   type EmergencyListType = {
     target: string;
     phone: string;
   };
-  const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(null); const [isEnabled, setIsEnabled] = useState(false);
+  const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(null); const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-  useEffect(() => {
-    const setting = async () => {
-      try {
-        const info = await getUserInfo(userId);
-        setUserName(info.UserName);
-        setUserType(info.UserType);
-        setUserPhone(info.UserPhone);
-        setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    setting();
-  }, [userId]); // 의존성 배열
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
@@ -60,7 +72,7 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.keyText}>핸드폰 번호</Text>
-          <Text style={styles.valueText}>{userPhone}</Text>
+          <Text style={styles.textInput}>{userPhone}</Text>
           <TouchableOpacity>
             <Text style={styles.postText}>변경</Text>
           </TouchableOpacity>
@@ -78,7 +90,7 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
             emergencyList && (
               <>
                 <Text style={styles.keyText}>{emergencyList.target}</Text>
-                <Text style={styles.valueText}>{emergencyList.phone}</Text>
+                <Text style={styles.textInput}>{emergencyList.phone}</Text>
               </>
             )
           }
@@ -126,11 +138,13 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
         <View style={styles.emergencyContainer}>
           <Text style={styles.titleText}>계정</Text>
         </View>
-        <View style={styles.innerContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('ChangePasswordScreen')}>
           <Text style={styles.keyText}>비밀번호 수정</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.innerContainer}>
-          <Text style={styles.keyText}>로그아웃</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+            <Text style={styles.keyText}>로그아웃</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.keyText}>회원탈퇴</Text>
@@ -196,6 +210,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     borderRadius: 8,
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  textInput: {
+    minWidth: 200,
+    fontSize: 20,
+    justifyContent: 'center',
+    borderBottomWidth: 2,
+    borderColor: colors.navy,
+    margin: 5,
     fontWeight: 'bold',
   },
 });

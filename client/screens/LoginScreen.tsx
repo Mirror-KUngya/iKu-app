@@ -11,6 +11,7 @@ import colors from '../lib/styles/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
 import handleLogin from '../handleApi/User/login';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
@@ -19,6 +20,7 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const onLoginPress = () => {
     handleLogin(userId, password, navigation);
+  
   };
   return (
     <View style={styles.container}>
@@ -45,16 +47,22 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         secureTextEntry={true}
         blurOnSubmit={false}
         value={password}
-        // onChange={e => setPassword(e.nativeEvent.text)}
         onChangeText={text => setPassword(text)}
       />
       <View>
         <TouchableOpacity
           style={[styles.loginButtonContainer]}
-          onPress={onLoginPress}
-          // onPress={() => {
-          //   navigation.navigate('HomeScreen');
-          // }}
+          onPress={async () => {
+            try {
+              const result = await handleLogin(userId, password,navigation);
+              if (result) {
+                AsyncStorage.setItem('userId', userId);
+                navigation.navigate('HomeScreen');
+              }
+            } catch(error){
+              console.log(error);
+            }
+          }}
           >
           <Text style={styles.loginText}>로그인</Text>
         </TouchableOpacity>

@@ -19,7 +19,8 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
   const [inputPhone, setInputPhone] = useState('');
   const [hideFirstScreen, setHideFirstScreen] = useState(false); // 첫 화면 숨기기
   const [result, setResult] = useState(false); // 비밀번호 성공하면 true, 실패하면 false로
-  const [userId, setUserId] = useState('sobok_owner'); // 회원 아이디
+  const [userId, setUserId] = useState(''); // 회원 아이디
+  
   return (
     <View style={styles.container}>
       <View
@@ -47,12 +48,20 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
           style={[styles.buttonContainer]}
           onPress={async () => {
             try {
-              const id = await findID(inputName, inputPhone);
-              setUserId(userId);
-              setResult(true);
-              setHideFirstScreen(true);
+              const foundUserId = await findID(inputName, inputPhone);
+              if (foundUserId) {
+                setUserId(foundUserId); // 찾은 아이디 설정
+                setResult(true); // 결과 상태를 성공으로 설정
+              } else {
+                setUserId(''); // 아이디를 비움
+                setResult(false); // 결과 상태를 실패로 설정
+              }
+              setHideFirstScreen(true); // 화면 전환
             } catch (error) {
-              console.log(error)
+              console.log(error);
+              setUserId(''); // 오류 발생 시 아이디를 비움
+              setResult(false); // 결과 상태를 실패로 설정
+              setHideFirstScreen(true); // 화면 전환
             }
           }}>
           <Text style={styles.buttonText}>찾기</Text>

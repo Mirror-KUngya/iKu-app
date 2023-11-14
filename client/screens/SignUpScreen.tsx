@@ -16,14 +16,14 @@ import DatePicker from '../components/DatePicker';
 import checkDuplication from '../handleApi/User/checkDuplication';
 import signUp from '../handleApi/User/signUp';
 import signUpGaurd from '../handleApi/User/signUpGuard';
+import isExist from '../handleApi/User/hasSliver';
 import { Alert } from 'react-native';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
 const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [userId, setUserID] = useState('');
-  const [isUserIdAvailable, 
-    setIsUserIdAvailable] = useState(false);
+  const [isUserIdAvailable, setIsUserIdAvailable] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userName, setUserName] = useState('');
@@ -34,8 +34,9 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [userAddress, setUserAddress] = useState('');
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [relationshipWithSilver, setRelationshipWithSilver] = useState('');
+  const [isDuplicationChecked, setIsDuplicationChecked] = useState(false);
+  const [isSilverSearched, setIsSilverSearched] = useState(false);
 
-  
   const handlePasswordChange = (text: string) => {
     setPassword(text);
     setIsPasswordMatch(text === confirmPassword);
@@ -61,6 +62,35 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const handleDateChange = (year: string, month: string, day: string) => {
     setDate({ year, month, day });
   };
+
+  // '중복 확인' 버튼 로직
+  const handleCheckDuplication = async () => {
+    try {
+      const isDuplicated = await checkDuplication(userId);
+      setIsUserIdAvailable(!isDuplicated);
+      setIsDuplicationChecked(!isDuplicated); // 중복 확인 완료 상태 업데이트
+    } catch (error) {
+      setIsUserIdAvailable(false);
+      console.log(error);
+    }
+  };
+
+  // '검색' 버튼 로직
+  const handleSearchSilver = async () => {
+    try {
+      const result = await isExist(seniorUserId, seniorUserPassword);
+      console.log("result", result)
+      if (!result) {
+        Alert.alert("존재하지 않는 회원입니다. 노인 회원가입부터 진행해주세요.")
+      } else {
+        Alert.alert("확인이 완료되었습니다.");
+        setIsSilverSearched(result); // 검색 완료 상태 업데이트
+      }  
+    } catch (error) {
+      console.log('Error searching silver user:', error);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
@@ -87,14 +117,14 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
             autoComplete={'email'}
             blurOnSubmit={false}
             value={userId}
-           onChangeText={text => setUserID(text)}
+            onChangeText={text => setUserID(text)}
           />
-          <TouchableOpacity onPress = {
+          <TouchableOpacity onPress={
             async () => {
               try {
                 const isDuplicated = await checkDuplication(userId);
                 setIsUserIdAvailable(!isDuplicated);
-              } catch(error) {
+              } catch (error) {
                 setIsUserIdAvailable(false);
                 console.log(error);
               }
@@ -169,23 +199,27 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
           value={phone}
           onChange={e => setPhone(e.nativeEvent.text)}
         />
-        <TextInput
-          placeholder="거주지 주소"
-          style={styles.textInput}
-          returnKeyType={'next'}
-          blurOnSubmit={false}
-          value={userAddress}
-          onChange={e => setUserAddress(e.nativeEvent.text)}
-        />
-        <TextInput
-          placeholder="보호자 전화번호"
-          style={styles.textInput}
-          keyboardType="number-pad"
-          returnKeyType={'next'}
-          blurOnSubmit={false}
-          value={guardPhone}
-          onChange={e => setGuardPhone(e.nativeEvent.text)}
-        />
+        {userOption === '노인 회원' && (
+          <>
+            <TextInput
+              placeholder="거주지 주소"
+              style={styles.textInput}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              value={userAddress}
+              onChange={e => setUserAddress(e.nativeEvent.text)}
+            />
+            <TextInput
+              placeholder="보호자 전화번호"
+              style={styles.textInput}
+              keyboardType="number-pad"
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              value={guardPhone}
+              onChange={e => setGuardPhone(e.nativeEvent.text)}
+            />
+          </>
+        )}
         {userOption === '보호자 회원' ? (
           <>
             <TextInput
@@ -214,14 +248,15 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
                 value={relationshipWithSilver}
                 onChange={e => setRelationshipWithSilver(e.nativeEvent.text)}
               />
-              <TouchableOpacity>
-                
+
+              <TouchableOpacity onPress={() => handleSearchSilver()}>
                 <Text style={[styles.okText, { margin: 0 }]}>검색</Text>
               </TouchableOpacity>
             </View>
             {/* <Text style={styles.confirmText}>
               비밀번호가 일치하지 않습니다.
-            </Text> */}
+            </Text> 
+            */}
           </>
         ) : (
           <>
@@ -235,13 +270,21 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
         )}
       </View>
       <TouchableOpacity
-        onPress={() => {
+        onPress={async() => {
           if (userOption === "노인 회원") {
-            signUp(userName, phone, userAddress, userId, password,date.year, date.month, date.day, userOption, guardPhone);
-            Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
-            navigation.navigate("LoginScreen");
+            const result = await signUp(userName, phone, userAddress, userId, password, date.year, date.month, date.day, userOption, guardPhone);
+            if (result){
+              Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
+              navigation.navigate("LoginScreen");
+            }
+            Alert.alert("모든 칸에 빠짐없이 입력해주세요.");
           } else {
-            // signUpGuard
+            const guard = await signUpGaurd(userId, password, userOption, userName, phone, seniorUserId, seniorUserPassword);
+            if (guard) {
+              Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
+              navigation.navigate("LoginScreen");
+            }
+            Alert.alert("모든 칸에 빠짐없이 입력해주세요.");
           }
         }}>
         <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>

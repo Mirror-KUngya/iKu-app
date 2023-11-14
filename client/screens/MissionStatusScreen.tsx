@@ -27,20 +27,22 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
         <Calendar
           onDayPress={day => setPickDate(new Date(day.dateString))}
           theme={{
+            textDayFontSize: 26,
+            textMonthFontSize: 32,
+            textDayHeaderFontSize: 32,
             arrowColor: colors.navy,
             arrowHeight: 40,
-            textMonthFontSize: 24,
             textMonthFontWeight: 'bold',
             todayTextColor: 'white',
             todayBackgroundColor: colors.orange,
             selectedDayBackgroundColor: 'orange',
-            textDayFontSize: 22,
             textDayFontWeight: 'bold',
+            weekVerticalMargin: 20,
           }}
         />
       </View>
       <View style={styles.line}></View>
-      <View style={{marginBottom: 10, marginHorizontal: 10}}>
+      <View style={{marginBottom: 20, marginHorizontal: 20}}>
         <Text style={styles.dateText}>{`${pickDate.getFullYear()}년 ${
           pickDate.getMonth() + 1
         }월 ${pickDate.getDate()}일`}</Text>
@@ -63,13 +65,13 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   line: {
-    height: 2,
+    height: 3,
     backgroundColor: colors.navy,
     marginHorizontal: 80,
-    marginVertical: 30,
+    marginVertical: 80,
   },
   dateText: {
-    fontSize: 20,
+    fontSize: 34,
     fontWeight: 'bold',
     color: colors.navy,
   },

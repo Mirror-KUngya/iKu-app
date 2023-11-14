@@ -76,6 +76,10 @@ function App(): JSX.Element {
           component={SignUpScreen}
           options={{
             title: '회원가입',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
         <Stack.Screen
           name="HomeScreen"
@@ -94,30 +98,50 @@ function App(): JSX.Element {
           component={CheckListScreen}
           options={{
             title: '체크리스트',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
         <Stack.Screen
           name="SettingScreen"
           component={SettingScreen}
           options={{
             title: '설정',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
         <Stack.Screen
           name="MissionStatusScreen"
           component={MissionStatusScreen}
           options={{
             title: '미션 현황',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
         <Stack.Screen
           name="ChangePasswordScreen"
           component={ChangePasswordScreen}
           options={{
             title: '비밀번호 변경',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
         <Stack.Screen
           name="FindIdScreen"
           component={FindIdScreen}
           options={{
             title: '아이디 찾기',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 26,
+            },
           }}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

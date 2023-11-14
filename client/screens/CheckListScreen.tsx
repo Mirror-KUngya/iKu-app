@@ -73,10 +73,10 @@ const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
         const updatedList = checkList.filter(item => item.toDo !== toDo); // 삭제된 아이템을 제외한 새 리스트 생성
         setCheckList(updatedList); // 상태 업데이트
       } catch (error) {
-        console.log("삭제 중 오류 발생: ", error);
+        console.log('삭제 중 오류 발생: ', error);
       }
     }
-  };  
+  };
 
   return (
     <View style={styles.container}>
@@ -114,19 +114,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 15,
+    padding: 25,
   },
   addContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
-    marginBottom: 20,
+    margin: 20,
+    marginBottom: 40,
   },
   textInput: {
     borderColor: colors.navy,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     width: width_proportion,
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: 'bold',
     color: 'gray',
   },
@@ -137,10 +137,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
     color: 'white',
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
     marginLeft: 5,
     borderRadius: 10,
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: 'bold',
   },
 });

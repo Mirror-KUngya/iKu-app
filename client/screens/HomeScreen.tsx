@@ -53,6 +53,10 @@ const HomeScreen: React.FC<HomeProps> = ({navigation}) => {
     </View>
   );
 };
+
+const top_height_proportion = '40%';
+const bottom_height_proportion = '60%';
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -60,28 +64,29 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flexDirection: 'row',
-    height: 250,
+    height: top_height_proportion,
   },
   bottomContainer: {
-    height: 100,
+    height: bottom_height_proportion,
   },
   buttonContainer: {
     borderRadius: 15,
-    margin: 5,
+    margin: 10,
     padding: 20,
     justifyContent: 'space-between',
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 40,
   },
   buttonImage: {
-    width: 75,
-    height: 75,
+    width: 100,
+    height: 100,
     resizeMode: 'contain',
     alignSelf: 'flex-end',
     opacity: 0.7,
+    padding: 50,
   },
 });
 export {HomeScreen};

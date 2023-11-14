@@ -1,15 +1,19 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Switch} from 'react-native-switch';
-import {RootStackParamList} from '../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { Switch } from 'react-native-switch';
+import { RootStackParamList } from '../types';
 import colors from '../lib/styles/colors';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import getUserInfo from '../handleApi/Setting/getUserInfo';
+import deleteUser from '../handleApi/User/deleteUser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import updateSilverPhone from '../handleApi/Setting/updateSilverPhone';
+import updateGuardPhone from '../handleApi/Setting/updateGaurdPhone';
+import { Alert } from 'react-native';
 
 type SettingProps = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>;
 
-const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
+const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -59,6 +63,60 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
     setting();
   }, [userId]); // userId 의존성 추가
 
+  const handleDelete = async (userId: String) => {
+    const result = await deleteUser(userId)
+    if (result) {
+      Alert.alert("회원탈퇴가 완료되었습니다.");
+      navigation.navigate("LoginScreen")
+    } else {
+      Alert.alert("회원탈퇴 중 문제가 발생했습니다. 잠시후 다시 시도해주세요.");
+    }
+  }
+
+  const formatPhoneNumber = (phoneNumber: string): string => {
+    // 숫자만 추출
+    const numbers = phoneNumber.replace(/[^\d]/g, '');
+
+    // 숫자를 그룹으로 나누어 형식에 맞게 변환
+    let formattedNumber = '';
+    if (numbers.length <= 3) {
+      formattedNumber = numbers;
+    } else if (numbers.length <= 7) {
+      formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    } else {
+      formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+    }
+
+    // 11자리를 초과하는 숫자는 자름
+    return formattedNumber.slice(0, 13);
+  };
+
+  const handleUpdateGuardPhone = async () => {
+    if (userId && GuardPhone) {
+      const result = await updateGuardPhone(userId, GuardPhone);
+      if (result) {
+        Alert.alert("보호자 전화번호 변경 성공", "보호자 전화번호가 성공적으로 변경되었습니다.");
+      } else {
+        Alert.alert("변경 실패", "보호자 전화번호 변경에 실패했습니다.");
+      }
+    } else {
+      Alert.alert("오류", "아이디 또는 전화번호가 유효하지 않습니다.");
+    }
+  };
+
+  const handleUpdateSilverphone = async () => {
+    if (userId && userPhone) {
+      const result = await updateSilverPhone(userId, userPhone);
+      if (result) {
+        Alert.alert("전화번호 변경 성공", "전화번호가 성공적으로 변경되었습니다.");
+      } else {
+        Alert.alert("변경 실패", "전화번호 변경에 실패했습니다.");
+      }
+    } else {
+      Alert.alert("오류", "아이디 또는 전화번호가 유효하지 않습니다.");
+    }
+  };
+
   const [userName, setUserName] = useState<string | null>(null);
   const [userType, setUserType] = useState<string | null>(null);
   const [userPhone, setUserPhone] = useState<string | null>(null);
@@ -71,8 +129,12 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
   const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(
     null,
   );
-  const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isMissionCompletedEnabled, setIsMissionCompletedEnabled] = useState(true);
+  const [isNoOperationEnabled, setIsNoOperationEnabled] = useState(true);
+
+  const toggleMissionCompleted = () => setIsMissionCompletedEnabled(previousState => !previousState);
+  const toggleNoOperation = () => setIsNoOperationEnabled(previousState => !previousState);
+
 
   return (
     <View style={styles.container}>
@@ -83,10 +145,19 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.keyText}>핸드폰 번호</Text>
-          <Text style={styles.textInput}>{userPhone}</Text>
-          <TouchableOpacity>
+          <TextInput
+            placeholder={userPhone || "전화번호"} // userPhone이 null일 경우 "전화번호"를 표시
+            style={styles.textInput}
+            keyboardType="number-pad"
+            returnKeyType={'next'}
+            blurOnSubmit={false}
+            value={userPhone || ''} // userPhone이 null일 경우 빈 문자열을 전달
+            onChange={e => setUserPhone(formatPhoneNumber(e.nativeEvent.text))}
+          />
+          <TouchableOpacity onPress={handleUpdateSilverphone}>
             <Text style={styles.postText}>변경</Text>
           </TouchableOpacity>
+
         </View>
       </View>
       <View style={styles.contentContainer}>
@@ -100,11 +171,19 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
           {emergencyList && (
             <>
               <Text style={styles.keyText}>{emergencyList.target}</Text>
-              <Text style={styles.textInput}>{emergencyList.phone}</Text>
+              <TextInput
+                placeholder={GuardPhone || "보호자 전화번호"}
+                style={styles.textInput}
+                keyboardType="number-pad"
+                returnKeyType={'next'}
+                blurOnSubmit={false}
+                value={GuardPhone || ''}
+                onChange={e => setGuardPhone(formatPhoneNumber(e.nativeEvent.text))}
+              />
             </>
           )}
-          <TouchableOpacity>
-            <Text style={styles.postText}>수정</Text>
+          <TouchableOpacity onPress={handleUpdateGuardPhone}>
+            <Text style={styles.postText}>변경</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -119,8 +198,8 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
             inActiveText="꺼짐"
             circleSize={25}
             barHeight={30}
-            onValueChange={toggleSwitch}
-            value={isEnabled}
+            onValueChange={toggleMissionCompleted}
+            value={isMissionCompletedEnabled}
             backgroundActive={colors.orange}
             backgroundInactive={'gray'}
             switchLeftPx={2} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
@@ -134,8 +213,8 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
             inActiveText="꺼짐"
             circleSize={25}
             barHeight={30}
-            onValueChange={toggleSwitch}
-            value={isEnabled}
+            onValueChange={toggleNoOperation}
+            value={isNoOperationEnabled}
             backgroundActive={colors.orange}
             backgroundInactive={'gray'}
             switchLeftPx={2} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
@@ -157,7 +236,24 @@ const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.innerContainer}>
-          <Text style={styles.keyText}>회원탈퇴</Text>
+          <TouchableOpacity
+            onPress={() => {
+              if (userId !== null) {
+                Alert.alert(
+                  "사용자의 모든 정보가 삭제됩니다.",
+                  "계속 하시겠습니까?",
+                  [
+                    { text: "아니요", style: "cancel" },
+                    { text: "네", onPress: () => handleDelete(userId) }
+                  ]
+                );
+              } else {
+                // userId가 null일 때의 처리
+                Alert.alert("오류", "유효하지 않은 사용자 ID입니다.");
+              }
+            }}>
+            <Text style={styles.keyText}>회원탈퇴</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -236,4 +332,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export {SettingScreen};
+export { SettingScreen };

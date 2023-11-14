@@ -1,16 +1,15 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Switch } from 'react-native-switch';
-import { RootStackParamList } from '../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Switch} from 'react-native-switch';
+import {RootStackParamList} from '../types';
 import colors from '../lib/styles/colors';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import getUserInfo from '../handleApi/Setting/getUserInfo';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type SettingProps = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>;
 
-const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
-
+const SettingScreen: React.FC<SettingProps> = ({navigation}) => {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,16 +20,16 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
           setUserId(retrievedUserId);
         }
       } catch (error) {
-        console.log("아이디 가져오기 실패...", error);
+        console.log('아이디 가져오기 실패...', error);
       }
     };
     fetchUserId();
   }, []);
-  
+
   useEffect(() => {
-    console.log("현재 아이디", userId);
+    console.log('현재 아이디', userId);
   }, [userId]); // userId 상태가 변경될 때마다 실행
-  
+
   useEffect(() => {
     const setting = async () => {
       try {
@@ -41,8 +40,16 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
             setUserName(info.UserName);
             setUserType(info.UserType);
             setUserPhone(info.UserPhone);
+
             setGuardPhone(info.GuardPhone);
-            setEmergencyList({ target: info.Relationship, phone: info.GaurdPhone });
+            setEmergencyList({
+              target: info.Relationship,
+              phone: info.GaurdPhone,
+            });
+            setEmergencyList({
+              target: info.Relationship,
+              phone: info.GuardPhone,
+            });
           }
         }
       } catch (error) {
@@ -51,7 +58,7 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
     };
     setting();
   }, [userId]); // userId 의존성 추가
-  
+
   const [userName, setUserName] = useState<string | null>(null);
   const [userType, setUserType] = useState<string | null>(null);
   const [userPhone, setUserPhone] = useState<string | null>(null);
@@ -61,7 +68,10 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
     target: string;
     phone: string;
   };
-  const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(null); const [isEnabled, setIsEnabled] = useState(true);
+  const [emergencyList, setEmergencyList] = useState<EmergencyListType | null>(
+    null,
+  );
+  const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   return (
@@ -87,16 +97,14 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
           </Text>
         </View>
         <View style={styles.innerContainer}>
-          {
-            emergencyList && (
-              <>
-                <Text style={styles.keyText}>{emergencyList.target}</Text>
-                <Text style={styles.textInput}>{emergencyList.phone}</Text>
-              </>
-            )
-          }
+          {emergencyList && (
+            <>
+              <Text style={styles.keyText}>{emergencyList.target}</Text>
+              <Text style={styles.textInput}>{emergencyList.phone}</Text>
+            </>
+          )}
           <TouchableOpacity>
-            <Text style={styles.postText}>변경</Text>
+            <Text style={styles.postText}>수정</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -139,7 +147,8 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
         <View style={styles.emergencyContainer}>
           <Text style={styles.titleText}>계정</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('ChangePasswordScreen')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ChangePasswordScreen')}>
           <Text style={styles.keyText}>비밀번호 수정</Text>
         </TouchableOpacity>
         <View style={styles.innerContainer}>
@@ -155,16 +164,18 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
   );
 };
 
+const width_proportion = '60%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 15,
+    padding: 20,
   },
   contentContainer: {
     borderBottomWidth: 2,
     borderColor: colors.navy,
-    padding: 5,
+    padding: 10,
     marginVertical: 10,
     justifyContent: 'center',
   },
@@ -182,23 +193,25 @@ const styles = StyleSheet.create({
   titleText: {
     color: colors.navy,
     fontWeight: '900',
-    fontSize: 26,
-    marginRight: 10,
+    fontSize: 32,
+    marginRight: 20,
+    marginVertical: 20,
   },
   middleText: {
     color: colors.orange,
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
   },
   keyText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 26,
+    margin: 10,
   },
   valueText: {
     color: colors.navy,
     fontWeight: '900',
-    fontSize: 20,
+    fontSize: 26,
   },
   postButton: {
     alignSelf: 'center',
@@ -210,12 +223,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginLeft: 5,
     borderRadius: 8,
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
   },
   textInput: {
-    minWidth: 200,
-    fontSize: 20,
+    minWidth: width_proportion,
+    fontSize: 26,
     justifyContent: 'center',
     borderBottomWidth: 2,
     borderColor: colors.navy,
@@ -223,4 +236,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export { SettingScreen };
+export {SettingScreen};

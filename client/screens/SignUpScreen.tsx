@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, {useState} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Image,
   ScrollView,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RootStackParamList } from '../types';
+import {RootStackParamList} from '../types';
 import colors from '../lib/styles/colors';
 import inputState from '../lib/utils/inputState';
 import DatePicker from '../components/DatePicker';
@@ -17,11 +17,11 @@ import checkDuplication from '../handleApi/User/checkDuplication';
 import signUp from '../handleApi/User/signUp';
 import signUpGaurd from '../handleApi/User/signUpGuard';
 import isExist from '../handleApi/User/hasSliver';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
-const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
+const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
   const [userId, setUserID] = useState('');
   const [isUserIdAvailable, setIsUserIdAvailable] = useState(false);
   const [password, setPassword] = useState('');
@@ -54,26 +54,28 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
 
   const [userIdInputState, setUserIdInputState] = useState(inputState.NORMAL);
   const [date, setDate] = useState({
-    year: '2023',
+    year: '1950',
     month: '01',
     day: '01',
   });
 
   const handleDateChange = (year: string, month: string, day: string) => {
-    setDate({ year, month, day });
+    setDate({year, month, day});
   };
 
   // '검색' 버튼 로직
   const handleSearchSilver = async () => {
     try {
       const result = await isExist(seniorUserId, seniorUserPassword);
-      console.log("result", result)
+      console.log('result', result);
       if (!result) {
-        Alert.alert("존재하지 않는 회원입니다. 노인 회원가입부터 진행해주세요.")
+        Alert.alert(
+          '존재하지 않는 회원입니다. 노인 회원가입부터 진행해주세요.',
+        );
       } else {
-        Alert.alert("확인이 완료되었습니다.");
+        Alert.alert('확인이 완료되었습니다.');
         setIsSilverSearched(result); // 검색 완료 상태 업데이트
-      }  
+      }
     } catch (error) {
       console.log('Error searching silver user:', error);
     }
@@ -82,7 +84,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
-        <View style={styles.topFirstContainer}>
+        <View>
           <Image
             style={styles.logoImage}
             source={require('../assets/images/iku_image.png')}
@@ -107,8 +109,8 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
             value={userId}
             onChangeText={text => setUserID(text)}
           />
-          <TouchableOpacity onPress={
-            async () => {
+          <TouchableOpacity
+            onPress={async () => {
               try {
                 const isDuplicated = await checkDuplication(userId);
                 setIsUserIdAvailable(!isDuplicated);
@@ -117,8 +119,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
                 setIsUserIdAvailable(false);
                 console.log(error);
               }
-            }
-          }>
+            }}>
             <Text style={styles.okText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
@@ -145,7 +146,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
         {!isPasswordMatch && (
           <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
         )}
-        <View style={{ marginTop: 20 }}></View>
+        <View style={{marginTop: 20}}></View>
         <Text style={styles.titleText}>회원 정보</Text>
         <View style={styles.rowContainer}>
           <TouchableOpacity
@@ -229,56 +230,84 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
                 value={seniorUserPassword}
                 onChange={e => setSenioeUserPassword(e.nativeEvent.text)}
               />
-              <TextInput
-                placeholder="노인회원과의 관계"
-                style={styles.textInput}
-                returnKeyType={'next'}
-                blurOnSubmit={false}
-                value={relationshipWithSilver}
-                onChange={e => setRelationshipWithSilver(e.nativeEvent.text)}
-              />
-
               <TouchableOpacity onPress={() => handleSearchSilver()}>
-                <Text style={[styles.okText, { margin: 0 }]}>검색</Text>
+                <Text style={[styles.okText, {margin: 0}]}>검색</Text>
               </TouchableOpacity>
             </View>
+            <TextInput
+              placeholder="노인회원과의 관계"
+              style={styles.textInput}
+              returnKeyType={'next'}
+              blurOnSubmit={false}
+              value={relationshipWithSilver}
+              onChange={e => setRelationshipWithSilver(e.nativeEvent.text)}
+            />
+
             {/* <Text style={styles.confirmText}>
               비밀번호가 일치하지 않습니다.
             </Text> 
             */}
           </>
         ) : (
-          <>
+          <View style={styles.rowContainer}>
+            <Text style={styles.spanText}>생년월일</Text>
             <DatePicker
               year={date.year}
               month={date.month}
               day={date.day}
               onDateChange={handleDateChange}
             />
-          </>
+          </View>
         )}
       </View>
       <TouchableOpacity
-        onPress={async() => {
-          if (userOption === "노인 회원") {
-            const result = await signUp(userName, phone, userAddress, userId, password, date.year, date.month, date.day, userOption, guardPhone);
-            if (result && isDuplicationChecked){
-              Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
+        onPress={async () => {
+          if (userOption === '노인 회원') {
+            const result = await signUp(
+              userName,
+              phone,
+              userAddress,
+              userId,
+              password,
+              date.year,
+              date.month,
+              date.day,
+              userOption,
+              guardPhone,
+            );
+            if (result && isDuplicationChecked) {
+              Alert.alert(
+                '회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.',
+              );
               navigation.navigate('LoginScreen');
             }
           } else {
-            const guard = await signUpGaurd(userId, password, userOption, userName, phone, relationshipWithSilver,seniorUserId, seniorUserPassword);
+            const guard = await signUpGaurd(
+              userId,
+              password,
+              userOption,
+              userName,
+              phone,
+              relationshipWithSilver,
+              seniorUserId,
+              seniorUserPassword,
+            );
             if (guard && isDuplicationChecked && isSilverSearched) {
-              Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
-              navigation.navigate("LoginScreen");
+              Alert.alert(
+                '회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.',
+              );
+              navigation.navigate('LoginScreen');
             }
           }
         }}>
-        <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>
+        <Text style={[styles.okText, {marginBottom: 50}]}>회원가입</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
+
+const width_proportion = '80%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -287,9 +316,6 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flexDirection: 'row',
-  },
-  topFirstContainer: {
-    width: 150,
   },
   topSecondContainer: {
     alignSelf: 'center',
@@ -315,7 +341,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    minWidth: 200,
+    minWidth: width_proportion,
     fontSize: 20,
     justifyContent: 'center',
     borderBottomWidth: 2,
@@ -358,5 +384,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  spanText: {
+    flex: 0.2,
+    color: colors.navy,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginLeft: 5,
+    borderRadius: 8,
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
-export { SignUpScreen };
+export {SignUpScreen};

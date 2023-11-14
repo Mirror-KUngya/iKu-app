@@ -11,7 +11,7 @@ import colors from '../lib/styles/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
 import handleLogin from '../handleApi/User/login';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
@@ -20,7 +20,6 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const onLoginPress = () => {
     handleLogin(userId, password, navigation);
-  
   };
   return (
     <View style={styles.container}>
@@ -54,16 +53,15 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
           style={[styles.loginButtonContainer]}
           onPress={async () => {
             try {
-              const result = await handleLogin(userId, password,navigation);
+              const result = await handleLogin(userId, password, navigation);
               if (result) {
                 AsyncStorage.setItem('userId', userId);
                 navigation.navigate('HomeScreen');
               }
-            } catch(error){
+            } catch (error) {
               console.log(error);
             }
-          }}
-          >
+          }}>
           <Text style={styles.loginText}>로그인</Text>
         </TouchableOpacity>
       </View>
@@ -103,8 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   mainImage: {
-    width: 250,
-    height: 250,
+    flex: 0.5,
     resizeMode: 'contain',
     justifyContent: 'center',
   },
@@ -115,11 +112,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: 300,
-    fontSize: 20,
+    fontSize: 24,
     justifyContent: 'center',
     borderBottomWidth: 2,
     borderColor: colors.navy,
-    margin: 5,
+    margin: 10,
     fontWeight: 'bold',
   },
   loginButtonContainer: {
@@ -129,7 +126,7 @@ const styles = StyleSheet.create({
     width: 300,
     color: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 24,
     padding: 10,
     borderRadius: 10,
     backgroundColor: colors.navy,
@@ -141,16 +138,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 24,
     padding: 10,
     borderRadius: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    margin: 10,
+    margin: 20,
   },
   textInButton: {
-    fontSize: 20,
+    fontSize: 22,
     marginLeft: 10,
     marginRight: 10,
     fontWeight: 'bold',

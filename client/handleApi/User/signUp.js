@@ -22,7 +22,12 @@ async function signUp (userName, userPhone, userAddress, userId, password, birth
         if (response.status === 200) {
             console.log('회원가입 성공');
             return true;
-        } else { // 로그인 에러
+        } 
+        else if (response.status === 401) {
+            console.log("jjj")
+            return false;
+        }
+        else { // 로그인 에러
             console.log('회원가입 실패:', response.data.message);
             return false;
         }

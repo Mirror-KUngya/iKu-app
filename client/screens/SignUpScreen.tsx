@@ -34,8 +34,8 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [userAddress, setUserAddress] = useState('');
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [relationshipWithSilver, setRelationshipWithSilver] = useState('');
-  const [isDuplicationChecked, setIsDuplicationChecked] = useState(false);
-  const [isSilverSearched, setIsSilverSearched] = useState(false);
+  const [isDuplicationChecked, setIsDuplicationChecked] = useState(false); // 중복확인 결과
+  const [isSilverSearched, setIsSilverSearched] = useState(false); // 노인 검색 확인 결과
 
   const handlePasswordChange = (text: string) => {
     setPassword(text);
@@ -61,18 +61,6 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
 
   const handleDateChange = (year: string, month: string, day: string) => {
     setDate({ year, month, day });
-  };
-
-  // '중복 확인' 버튼 로직
-  const handleCheckDuplication = async () => {
-    try {
-      const isDuplicated = await checkDuplication(userId);
-      setIsUserIdAvailable(!isDuplicated);
-      setIsDuplicationChecked(!isDuplicated); // 중복 확인 완료 상태 업데이트
-    } catch (error) {
-      setIsUserIdAvailable(false);
-      console.log(error);
-    }
   };
 
   // '검색' 버튼 로직
@@ -124,6 +112,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
               try {
                 const isDuplicated = await checkDuplication(userId);
                 setIsUserIdAvailable(!isDuplicated);
+                setIsDuplicationChecked(!isDuplicated);
               } catch (error) {
                 setIsUserIdAvailable(false);
                 console.log(error);
@@ -273,18 +262,17 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
         onPress={async() => {
           if (userOption === "노인 회원") {
             const result = await signUp(userName, phone, userAddress, userId, password, date.year, date.month, date.day, userOption, guardPhone);
-            if (result){
+            if (result && isDuplicationChecked){
               Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
               navigation.navigate("LoginScreen");
             }
-            Alert.alert("모든 칸에 빠짐없이 입력해주세요.");
           } else {
             const guard = await signUpGaurd(userId, password, userOption, userName, phone, seniorUserId, seniorUserPassword);
-            if (guard) {
+            if (guard && isDuplicationChecked && isSilverSearched) {
               Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
               navigation.navigate("LoginScreen");
-            }
-            Alert.alert("모든 칸에 빠짐없이 입력해주세요.");
+            } else{
+            }    
           }
         }}>
         <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>

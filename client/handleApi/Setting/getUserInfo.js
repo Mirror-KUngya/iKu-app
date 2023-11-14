@@ -8,6 +8,8 @@ async function getUserInfo(userId) {
         console.log('UserInfo sent to server successfully');
         console.log(response.status)
         if (response.status === 200) {
+            console.log("dd")
+            console.log(response.data)
             return response.data;
         }
     } catch (error) {

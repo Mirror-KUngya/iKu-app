@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function signUpGaurd(userId, password, userType, userName, userPhone, seniorId, seniorpw) { 
+async function signUpGaurd(userId, password, userType, userName, userPhone, relation,seniorId, seniorpw) { 
     console.log("회원가입 - 보호자");
     const SERVER_URL = 'https://port-0-iku-1drvf2llok7l15f.sel5.cloudtype.app/users/signUpGaurd';
     try {
@@ -10,7 +10,7 @@ async function signUpGaurd(userId, password, userType, userName, userPhone, seni
             UserType: userType,
             UserName: userName,
             UserPhone: userPhone,
-            RelationshipWithSilver,
+            RelationshipWithSilver: relation,
             SilverID:seniorId,
             SilverPW:seniorpw
         });

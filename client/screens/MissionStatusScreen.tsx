@@ -4,8 +4,10 @@ import {RootStackParamList} from '../types';
 import {Calendar} from 'react-native-calendars';
 import colors from '../lib/styles/colors';
 import '../lib/utils/localeConfig';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {MissionItem} from '../components/MissionItem';
+import getMission from '../handleApi/Mission/getMission';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 type MissionStatustProps = NativeStackScreenProps<
   RootStackParamList,
   'MissionStatusScreen'
@@ -14,12 +16,51 @@ type MissionStatustProps = NativeStackScreenProps<
 const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
   const [pickDate, setPickDate] = useState(new Date());
 
-  let missionList = [
-    {text: '박수치기', fulFilled: true},
-    {text: '활짝 웃기', fulFilled: true},
-    {text: '옆구리 운동', fulFilled: true},
-    {text: '끝말잇기', fulFilled: true},
-  ];
+  const [missionList, setMissionList] = useState([
+    {text: '박수치기', fulFilled: false},
+    {text: '활짝 웃기', fulFilled: false},
+    {text: '옆구리 운동', fulFilled: false},
+    {text: '끝말잇기', fulFilled: false},
+  ]);
+
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const retrievedUserId = await AsyncStorage.getItem('userId');
+        if (retrievedUserId !== null) {
+          setUserId(retrievedUserId);
+        }
+      } catch (error) {
+        console.log("아이디 가져오기 실패...", error);
+      }
+    };
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    console.log("현재 아이디", userId);
+  }, [userId]); // userId 상태가 변경될 때마다 실행
+
+  useEffect(() => {
+    const fetchMission = async () => {
+      if (userId !== null) { // userId가 null이 아닐 때만 함수 실행
+        const missionDate = `${pickDate.getFullYear()}-${pickDate.getMonth() + 1}-${pickDate.getDate()}`;
+        const missionData = await getMission(userId, missionDate);
+        if (missionData) {
+          setMissionList([
+            {text: '박수치기', fulFilled: missionData.Clap},
+            {text: '활짝 웃기', fulFilled: missionData.Smile},
+            {text: '옆구리 운동', fulFilled: missionData.Exercise},
+            {text: '끝말잇기', fulFilled: missionData.WordChain},
+          ]);
+        }
+      }
+    };
+    fetchMission();
+  }, [userId, pickDate]); // userId가 변경될 때마다 useEffect가 다시 실행되도록 함
+  
 
   return (
     <ScrollView style={styles.container}>

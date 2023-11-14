@@ -41,7 +41,8 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
             setUserName(info.UserName);
             setUserType(info.UserType);
             setUserPhone(info.UserPhone);
-            setEmergencyList({ target: info.Relationship, phone: info.GuardPhone });
+            setGuardPhone(info.GuardPhone);
+            setEmergencyList({ target: info.Relationship, phone: info.GaurdPhone });
           }
         }
       } catch (error) {
@@ -95,7 +96,7 @@ const SettingScreen: React.FC<SettingProps> = ({ navigation }) => {
             )
           }
           <TouchableOpacity>
-            <Text style={styles.postText}>수정</Text>
+            <Text style={styles.postText}>변경</Text>
           </TouchableOpacity>
         </View>
       </View>

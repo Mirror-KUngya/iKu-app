@@ -264,15 +264,14 @@ const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
             const result = await signUp(userName, phone, userAddress, userId, password, date.year, date.month, date.day, userOption, guardPhone);
             if (result && isDuplicationChecked){
               Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
-              navigation.navigate("LoginScreen");
+              navigation.navigate('LoginScreen');
             }
           } else {
-            const guard = await signUpGaurd(userId, password, userOption, userName, phone, seniorUserId, seniorUserPassword);
+            const guard = await signUpGaurd(userId, password, userOption, userName, phone, relationshipWithSilver,seniorUserId, seniorUserPassword);
             if (guard && isDuplicationChecked && isSilverSearched) {
               Alert.alert("회원가입이 성공적으로 완료되었습니다!\n 로그인 화면으로 이동합니다.");
               navigation.navigate("LoginScreen");
-            } else{
-            }    
+            }
           }
         }}>
         <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>

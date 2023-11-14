@@ -1,5 +1,5 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types';
 import {
   Image,
   StyleSheet,
@@ -9,9 +9,9 @@ import {
   View,
 } from 'react-native';
 import colors from '../lib/styles/colors';
-import { useState } from 'react';
+import {useState} from 'react';
 import resetPW from '../handleApi/User/resetPW';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 import findUser from '../handleApi/User/findUserForPW';
 
 type ChangePasswordProps = NativeStackScreenProps<
@@ -19,7 +19,7 @@ type ChangePasswordProps = NativeStackScreenProps<
   'ChangePasswordScreen'
 >;
 
-const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => {
+const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({navigation}) => {
   const [inputId, setInputId] = useState('');
   const [inputPhone, setInputPhone] = useState('');
   const [inputNewPassword, setInputNewPassword] = useState('');
@@ -61,18 +61,17 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
           onPress={async () => {
             try {
               const user = await findUser(inputId, inputPhone);
-              console.log(user)
+              console.log(user);
               if (user) {
-                setIsExsit(true)
+                setIsExsit(true);
               } else {
-                setIsExsit(false)
-                Alert.alert("아이디나 전화번호를 다시 확인해주세요.");
+                setIsExsit(false);
+                Alert.alert('아이디나 전화번호를 다시 확인해주세요.');
               }
             } catch (error) {
               console.log(error);
             }
-          }
-          }
+          }}
           style={[styles.buttonContainer]}>
           <Text style={styles.buttonText}>회원 조회</Text>
         </TouchableOpacity>
@@ -98,18 +97,24 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
               onChangeText={handleConfirmPasswordChange} // 변경됨
             />
             {!isPasswordMatch && (
-              <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
+              <Text style={styles.confirmText}>
+                비밀번호가 일치하지 않습니다.
+              </Text>
             )}
             <TouchableOpacity
               style={[styles.buttonContainer]}
               onPress={async () => {
                 try {
-                   const res = await resetPW(inputId, inputPhone, inputNewPassword);
-                   console.log(res);
+                  const res = await resetPW(
+                    inputId,
+                    inputPhone,
+                    inputNewPassword,
+                  );
+                  console.log(res);
                   setResult(true);
                   setHideFirstScreen(true);
                 } catch (error) {
-                  Alert.alert("비밀번호 변경 중 오류가 발생했습니다.");
+                  Alert.alert('비밀번호 변경 중 오류가 발생했습니다.');
                   setResult(false);
                   setHideFirstScreen(false);
                 }
@@ -117,11 +122,11 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
               <Text style={styles.buttonText}>변경</Text>
             </TouchableOpacity>
           </>
-        ) }
+        )}
       </View>
       <View
         style={[
-          { alignItems: 'center', display: hideFirstScreen ? 'flex' : 'none' },
+          {alignItems: 'center', display: hideFirstScreen ? 'flex' : 'none'},
         ]}>
         {result ? (
           <>
@@ -147,12 +152,12 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
             <Text style={styles.titleText}>
               존재하지 않는{'\n'}회원 정보입니다.
             </Text>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => {
                   setHideFirstScreen(false);
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 160}]}>
                   이전 페이지로
                 </Text>
               </TouchableOpacity>
@@ -160,7 +165,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
                 onPress={() => {
                   navigation.navigate('LoginScreen');
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 160}]}>
                   로그인 하러 가기
                 </Text>
               </TouchableOpacity>
@@ -172,10 +177,12 @@ const ChangePasswordScreen: React.FC<ChangePasswordProps> = ({ navigation }) => 
   );
 };
 
+const width_proportion = '100%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 200,
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -186,8 +193,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    width: 300,
-    fontSize: 20,
+    fontSize: 30,
+    width: 600,
     justifyContent: 'center',
     borderBottomWidth: 2,
     borderColor: colors.navy,
@@ -201,16 +208,16 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: colors.navy,
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     margin: 20,
     textAlign: 'center',
   },
   buttonText: {
-    width: 300,
+    width: width_proportion,
     color: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 26,
     padding: 10,
     marginHorizontal: 5,
     borderRadius: 10,
@@ -224,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { ChangePasswordScreen };
+export {ChangePasswordScreen};

@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   userInfoContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   emergencyContainer: {},
   innerContainer: {

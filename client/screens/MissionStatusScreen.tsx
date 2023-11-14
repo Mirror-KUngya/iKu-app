@@ -7,7 +7,7 @@ import '../lib/utils/localeConfig';
 import {useState, useEffect} from 'react';
 import {MissionItem} from '../components/MissionItem';
 import getMission from '../handleApi/Mission/getMission';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 type MissionStatustProps = NativeStackScreenProps<
   RootStackParamList,
   'MissionStatusScreen'
@@ -33,20 +33,23 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
           setUserId(retrievedUserId);
         }
       } catch (error) {
-        console.log("아이디 가져오기 실패...", error);
+        console.log('아이디 가져오기 실패...', error);
       }
     };
     fetchUserId();
   }, []);
 
   useEffect(() => {
-    console.log("현재 아이디", userId);
+    console.log('현재 아이디', userId);
   }, [userId]); // userId 상태가 변경될 때마다 실행
 
   useEffect(() => {
     const fetchMission = async () => {
-      if (userId !== null) { // userId가 null이 아닐 때만 함수 실행
-        const missionDate = `${pickDate.getFullYear()}-${pickDate.getMonth() + 1}-${pickDate.getDate()}`;
+      if (userId !== null) {
+        // userId가 null이 아닐 때만 함수 실행
+        const missionDate = `${pickDate.getFullYear()}-${
+          pickDate.getMonth() + 1
+        }-${pickDate.getDate()}`;
         const missionData = await getMission(userId, missionDate);
         if (missionData) {
           setMissionList([
@@ -60,7 +63,6 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
     };
     fetchMission();
   }, [userId, pickDate]); // userId가 변경될 때마다 useEffect가 다시 실행되도록 함
-  
 
   return (
     <ScrollView style={styles.container}>
@@ -74,9 +76,7 @@ const MissionStatusScreen: React.FC<MissionStatustProps> = ({navigation}) => {
             arrowColor: colors.navy,
             arrowHeight: 40,
             textMonthFontWeight: 'bold',
-            todayTextColor: 'white',
-            todayBackgroundColor: colors.orange,
-            selectedDayBackgroundColor: 'orange',
+            todayTextColor: colors.orange,
             textDayFontWeight: 'bold',
             weekVerticalMargin: 20,
           }}

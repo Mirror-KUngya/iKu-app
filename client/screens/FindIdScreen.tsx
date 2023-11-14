@@ -1,5 +1,5 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types';
 import {
   Image,
   StyleSheet,
@@ -9,18 +9,18 @@ import {
   View,
 } from 'react-native';
 import colors from '../lib/styles/colors';
-import { useState } from 'react';
+import {useState} from 'react';
 import findID from '../handleApi/User/findID';
 
 type FindIdProps = NativeStackScreenProps<RootStackParamList, 'FindIdScreen'>;
 
-const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
+const FindIdScreen: React.FC<FindIdProps> = ({navigation}) => {
   const [inputName, setInputName] = useState('');
   const [inputPhone, setInputPhone] = useState('');
   const [hideFirstScreen, setHideFirstScreen] = useState(false); // 첫 화면 숨기기
   const [result, setResult] = useState(false); // 비밀번호 성공하면 true, 실패하면 false로
   const [userId, setUserId] = useState(''); // 회원 아이디
-  
+
   return (
     <View style={styles.container}>
       <View
@@ -82,12 +82,12 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
               회원님의 아이디는{'\n'}
               {userId}입니다.
             </Text>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('LoginScreen');
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 160}]}>
                   로그인 하러 가기
                 </Text>
               </TouchableOpacity>
@@ -95,7 +95,7 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate('ChangePasswordScreen');
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 160}]}>
                   비밀번호변경
                 </Text>
               </TouchableOpacity>
@@ -110,12 +110,12 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
             <Text style={styles.titleText}>
               존재하지 않는{'\n'}회원 정보입니다.
             </Text>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => {
                   setHideFirstScreen(false);
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 200}]}>
                   이전 페이지로
                 </Text>
               </TouchableOpacity>
@@ -123,7 +123,7 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate('LoginScreen');
                 }}>
-                <Text style={[styles.buttonText, { width: 160 }]}>
+                <Text style={[styles.buttonText, {width: 200}]}>
                   로그인 하러 가기
                 </Text>
               </TouchableOpacity>
@@ -135,10 +135,12 @@ const FindIdScreen: React.FC<FindIdProps> = ({ navigation }) => {
   );
 };
 
+const width_proportion = '100%';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 200,
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -149,8 +151,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    width: 300,
-    fontSize: 20,
+    fontSize: 30,
+    width: 600,
     justifyContent: 'center',
     borderBottomWidth: 2,
     borderColor: colors.navy,
@@ -164,20 +166,19 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: colors.navy,
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     margin: 20,
     textAlign: 'center',
   },
   buttonText: {
-    width: 300,
     color: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 26,
     padding: 10,
     marginHorizontal: 5,
     borderRadius: 10,
     backgroundColor: colors.navy,
   },
 });
-export { FindIdScreen };
+export {FindIdScreen};

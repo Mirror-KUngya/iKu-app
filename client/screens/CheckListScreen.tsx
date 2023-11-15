@@ -1,5 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -58,11 +59,15 @@ const CheckListScreen: React.FC<CheckListProps> = ({navigation}) => {
 
   // 새 항목을 체크리스트에 추가하는 함수
   const handleAddItem = () => {
-    if (newCheckListItem.trim() !== '') {
-      const newItem: CheckListItem = {toDo: newCheckListItem};
-      addCheckList(userId, newCheckListItem);
-      setCheckList([...checkList, newItem]);
-      setNewCheckListItem(''); // 항목을 추가한 후 TextInput을 지웁니다
+    if (checkList.length >= 3) {
+      Alert.alert('체크리스트는 최대 3개까지 추가 가능합니다.');
+    } else {
+      if (newCheckListItem.trim() !== '') {
+        const newItem: CheckListItem = {toDo: newCheckListItem};
+        addCheckList(userId, newCheckListItem);
+        setCheckList([...checkList, newItem]);
+        setNewCheckListItem(''); // 항목을 추가한 후 TextInput을 지웁니다
+      }
     }
   };
 

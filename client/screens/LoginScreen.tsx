@@ -12,15 +12,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
 import handleLogin from '../handleApi/User/login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'LoginScreen'>;
 
 const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
   const [userId, setUserID] = useState('');
   const [password, setPassword] = useState('');
-  const onLoginPress = () => {
-    handleLogin(userId, password, navigation);
-  };
+  
   return (
     <View style={styles.container}>
       <Image
@@ -57,6 +56,8 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
               if (result) {
                 AsyncStorage.setItem('userId', userId);
                 navigation.navigate('HomeScreen');
+              } else {
+                Alert.alert("아이디나 비밀번호를 다시 확인해주세요.")
               }
             } catch (error) {
               console.log(error);

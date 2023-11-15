@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Image,
   ScrollView,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RootStackParamList} from '../types';
+import { RootStackParamList } from '../types';
 import colors from '../lib/styles/colors';
 import inputState from '../lib/utils/inputState';
 import DatePicker from '../components/DatePicker';
@@ -17,11 +17,11 @@ import checkDuplication from '../handleApi/User/checkDuplication';
 import signUp from '../handleApi/User/signUp';
 import signUpGaurd from '../handleApi/User/signUpGuard';
 import isExist from '../handleApi/User/hasSliver';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 
 type SignUptProps = NativeStackScreenProps<RootStackParamList, 'SignUpScreen'>;
 
-const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
+const SignUpScreen: React.FC<SignUptProps> = ({ navigation }) => {
   const [userId, setUserID] = useState('');
   const [isUserIdAvailable, setIsUserIdAvailable] = useState(false);
   const [password, setPassword] = useState('');
@@ -60,7 +60,25 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
   });
 
   const handleDateChange = (year: string, month: string, day: string) => {
-    setDate({year, month, day});
+    setDate({ year, month, day });
+  };
+
+  const formatPhoneNumber = (phoneNumber: string): string => {
+    // 숫자만 추출
+    const numbers = phoneNumber.replace(/[^\d]/g, '');
+
+    // 숫자를 그룹으로 나누어 형식에 맞게 변환
+    let formattedNumber = '';
+    if (numbers.length <= 3) {
+      formattedNumber = numbers;
+    } else if (numbers.length <= 7) {
+      formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    } else {
+      formattedNumber = `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+    }
+
+    // 11자리를 초과하는 숫자는 자름
+    return formattedNumber.slice(0, 13);
   };
 
   // '검색' 버튼 로직
@@ -146,7 +164,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
         {!isPasswordMatch && (
           <Text style={styles.confirmText}>비밀번호가 일치하지 않습니다.</Text>
         )}
-        <View style={{marginTop: 20}}></View>
+        <View style={{ marginTop: 20 }}></View>
         <Text style={styles.titleText}>회원 정보</Text>
         <View style={styles.rowContainer}>
           <TouchableOpacity
@@ -187,7 +205,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
           returnKeyType={'next'}
           blurOnSubmit={false}
           value={phone}
-          onChange={e => setPhone(e.nativeEvent.text)}
+          onChange={e => setPhone(formatPhoneNumber(e.nativeEvent.text))}
         />
         {userOption === '노인 회원' && (
           <>
@@ -231,7 +249,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
                 onChange={e => setSenioeUserPassword(e.nativeEvent.text)}
               />
               <TouchableOpacity onPress={() => handleSearchSilver()}>
-                <Text style={[styles.okText, {margin: 0}]}>검색</Text>
+                <Text style={[styles.okText, { margin: 0 }]}>검색</Text>
               </TouchableOpacity>
             </View>
             <TextInput
@@ -242,11 +260,6 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
               value={relationshipWithSilver}
               onChange={e => setRelationshipWithSilver(e.nativeEvent.text)}
             />
-
-            {/* <Text style={styles.confirmText}>
-              비밀번호가 일치하지 않습니다.
-            </Text> 
-            */}
           </>
         ) : (
           <View style={styles.rowContainer}>
@@ -263,6 +276,9 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
       <TouchableOpacity
         onPress={async () => {
           if (userOption === '노인 회원') {
+            if (!isDuplicationChecked) {
+              Alert.alert("아이디 중복확인을 진행해주세요.")
+            }
             const result = await signUp(
               userName,
               phone,
@@ -282,6 +298,12 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
               navigation.navigate('LoginScreen');
             }
           } else {
+            if (!isDuplicationChecked) {
+              Alert.alert("아이디 중복확인을 진행해주세요.")
+            }
+            if (!isSilverSearched) {
+              Alert.alert("노인 회원 검색을 진행해주세요.")
+            }
             const guard = await signUpGaurd(
               userId,
               password,
@@ -300,7 +322,7 @@ const SignUpScreen: React.FC<SignUptProps> = ({navigation}) => {
             }
           }
         }}>
-        <Text style={[styles.okText, {marginBottom: 50}]}>회원가입</Text>
+        <Text style={[styles.okText, { marginBottom: 50 }]}>회원가입</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -396,4 +418,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-export {SignUpScreen};
+export { SignUpScreen };
